@@ -6,15 +6,15 @@
 	import type { CalculatorInputs, CalculatorResults } from '$lib/calculators/types';
 
 	// Form state
-	let pump1Flow = 0;
-	let pump1Head = 0;
-	let pump1Velocity = 0;
+	let pump1Flow = 10;
+	let pump1Head = 12;
+	let pump1Velocity = 2;
 
-	let pump2Flow = 0;
-	let pump2Head = 0;
-	let pump2Velocity = 0;
+	let pump2Flow = 20;
+	let pump2Head = 24;
+	let pump2Velocity = 4;
 
-	let manifoldVelocity = 0;
+	let manifoldVelocity = 1.5;
 
 	// Results state
 	let results: CalculatorResults | null = null;
