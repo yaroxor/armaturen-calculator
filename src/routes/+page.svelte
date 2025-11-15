@@ -175,13 +175,7 @@
 
 	<div class="diagram-column">
 		<div class="diagram-sticky">
-			{#if results}
-				<Schema01Diagram {results} />
-			{:else}
-				<div class="diagram-placeholder">
-					<p>Заполните форму и нажмите "Рассчитать" чтобы увидеть схему</p>
-				</div>
-			{/if}
+			<Schema01Diagram {results} />
 		</div>
 	</div>
 </div>
@@ -217,18 +211,6 @@
 		align-items: center;
 		justify-content: stretch;
 		padding: 1rem;
-	}
-
-	/* Placeholder before calculation */
-	.diagram-placeholder {
-		text-align: center;
-		color: #999;
-		padding: 2rem;
-	}
-
-	.diagram-placeholder p {
-		font-size: 1.1rem;
-		max-width: 300px;
 	}
 
 	/* Calculator container */
