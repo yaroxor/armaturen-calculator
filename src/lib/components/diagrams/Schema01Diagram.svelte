@@ -219,9 +219,17 @@
 </div>
 
 <style>
+	.diagram-wrapper {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
 	h3 {
 		margin: 0 0 1rem 0;
 		color: #333;
+		font-size: 1.3rem;
 	}
 
 	.schema {
