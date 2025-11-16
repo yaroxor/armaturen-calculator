@@ -7,6 +7,27 @@
 	$: isPump1Active = results && results.pump1.flow_m3_per_s > 0;
 	$: isPump2Active = results && results.pump2.flow_m3_per_s > 0;
 	$: isManifoldActive = isPump1Active || isPump2Active;
+
+	const pump1 = { x: 140, y: 200 };
+	const pump2 = { x: 140, y: 500 };
+
+	const k1 = { x: 310, y: 200 };
+	const z1 = { x: 450, y: 200 };
+
+	const k2 = { x: 310, y: 500 };
+	const z2 = { x: 450, y: 500 };
+
+	const manifold = { x: 600, y: 350, width: 90, height: 200 };
+
+	const z3 = { x: 730, y: 270 };
+	const z4 = { x: 730, y: 360 };
+	const z5 = { x: 730, y: 430 };
+
+	const manifoldPipeStart = 645;
+	const valveWidth = 40;
+	const valveHeight = 40;
+
+	const output = { x: 850 };
 </script>
 
 <div class="diagram-wrapper">
@@ -27,12 +48,12 @@
 		<!-- PUMP 1 -->
 		<g class="pump" class:active={isPump1Active}>
 			<!-- Pump body -->
-			<rect x="100" y="150" width="80" height="100" rx="10" class="pump-body" />
-			<circle cx="140" cy="200" r="35" class="pump-impeller" />
+			<rect x={pump1.x - 40} y={pump1.y - 50} width="80" height="100" rx="10" class="pump-body" />
+			<circle cx={pump1.x} cy={pump1.y} r="35" class="pump-impeller" />
 
 			<!-- Pump label -->
-			<text x="140" y="205" text-anchor="middle" class="pump-label">Н1</text>
-			<text x="140" y="280" text-anchor="middle" class="component-info">
+			<text x={pump1.x} y={pump1.y + 5} text-anchor="middle" class="pump-label">Н1</text>
+			<text x={pump1.x} y={pump1.y + 80} text-anchor="middle" class="component-info">
 				{#if results}
 					{results.pump1.flow_m3_per_h.toFixed(0)} м³/ч
 				{/if}
@@ -42,12 +63,12 @@
 		<!-- PUMP 2 -->
 		<g class="pump" class:active={isPump2Active}>
 			<!-- Pump body -->
-			<rect x="100" y="450" width="80" height="100" rx="10" class="pump-body" />
-			<circle cx="140" cy="500" r="35" class="pump-impeller" />
+			<rect x={pump2.x - 40} y={pump2.y - 50} width="80" height="100" rx="10" class="pump-body" />
+			<circle cx={pump2.x} cy={pump2.y} r="35" class="pump-impeller" />
 
 			<!-- Pump label -->
-			<text x="140" y="505" text-anchor="middle" class="pump-label">Н2</text>
-			<text x="140" y="580" text-anchor="middle" class="component-info">
+			<text x={pump2.x} y={pump2.y + 5} text-anchor="middle" class="pump-label">Н2</text>
+			<text x={pump2.x} y={pump2.y + 80} text-anchor="middle" class="component-info">
 				{#if results}
 					{results.pump2.flow_m3_per_h.toFixed(0)} м³/ч
 				{/if}
@@ -55,161 +76,295 @@
 		</g>
 
 		<!-- PIPE FROM PUMP 1 -->
-		<line x1="180" y1="200" x2="280" y2="200" class="pipe" class:active={isPump1Active} />
-		<polygon points="275,195 285,200 275,205" class="flow-arrow" class:active={isPump1Active} />
+		<line
+			x1={pump1.x + 40}
+			y1={pump1.y}
+			x2={k1.x - 20}
+			y2={pump1.y}
+			class="pipe"
+			class:active={isPump1Active}
+		/>
+		<polygon
+			points={`${k1.x - 35},${pump1.y - 5} ${k1.x - 25},${pump1.y} ${k1.x - 35},${pump1.y + 5}`}
+			class="flow-arrow"
+			class:active={isPump1Active}
+		/>
 
 		<!-- CHECK VALVE K1 -->
 		<g class="valve check-valve" class:active={isPump1Active}>
-			<rect x="290" y="180" width="40" height="40" rx="5" class="valve-body" />
-			<path d="M 300 200 L 320 190 L 320 210 Z" fill="#fff" />
-			<text x="310" y="235" text-anchor="middle" class="valve-label">К1</text>
+			<rect x={k1.x - 20} y={k1.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<path
+				d={`M ${k1.x - 10} ${k1.y} L ${k1.x + 10} ${k1.y - 10} L ${k1.x + 10} ${k1.y + 10} Z`}
+				fill="#fff"
+			/>
+			<text x={k1.x} y={k1.y + 35} text-anchor="middle" class="valve-label">К1</text>
 			{#if results}
-				<text x="310" y="250" text-anchor="middle" class="valve-info">
+				<text x={k1.x} y={k1.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.check_valve_k1.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
 		<!-- PIPE AFTER K1 -->
-		<line x1="330" y1="200" x2="420" y2="200" class="pipe" class:active={isPump1Active} />
-		<polygon points="415,195 425,200 415,205" class="flow-arrow" class:active={isPump1Active} />
+		<line
+			x1={k1.x + 20}
+			y1={k1.y}
+			x2={z1.x - 20}
+			y2={z1.y}
+			class="pipe"
+			class:active={isPump1Active}
+		/>
+		<polygon
+			points={`${z1.x - 25},${z1.y - 5} ${z1.x - 15},${z1.y} ${z1.x - 25},${z1.y + 5}`}
+			class="flow-arrow"
+			class:active={isPump1Active}
+		/>
 
 		<!-- GATE VALVE Z1 -->
 		<g class="valve gate-valve" class:active={isPump1Active}>
-			<rect x="430" y="180" width="40" height="40" rx="5" class="valve-body" />
-			<rect x="445" y="185" width="10" height="30" fill="#fff" />
-			<text x="450" y="235" text-anchor="middle" class="valve-label">З1</text>
+			<rect x={z1.x - 20} y={z1.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect x={z1.x - 5} y={z1.y - 15} width="10" height="30" fill="#fff" />
+			<text x={z1.x} y={z1.y + 35} text-anchor="middle" class="valve-label">З1</text>
 			{#if results}
-				<text x="450" y="250" text-anchor="middle" class="valve-info">
+				<text x={z1.x} y={z1.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.gate_valve_z1.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
 		<!-- PIPE TO MANIFOLD FROM LINE 1 -->
-		<line x1="470" y1="200" x2="550" y2="300" class="pipe" class:active={isPump1Active} />
-		<polygon points="545,295 555,300 545,305" class="flow-arrow" class:active={isPump1Active} />
+		<line
+			x1={z1.x + 20}
+			y1={z1.y}
+			x2={manifold.x - manifold.width / 2 - 5}
+			y2={manifold.y - 50}
+			class="pipe"
+			class:active={isPump1Active}
+		/>
+		<polygon
+			points={`${manifold.x - manifold.width / 2 - 10},${manifold.y - 55} ${manifold.x - manifold.width / 2},${manifold.y - 50} ${manifold.x - manifold.width / 2 - 10},${manifold.y - 45}`}
+			class="flow-arrow"
+			class:active={isPump1Active}
+		/>
 
 		<!-- PIPE FROM PUMP 2 -->
-		<line x1="180" y1="500" x2="280" y2="500" class="pipe" class:active={isPump2Active} />
-		<polygon points="275,495 285,500 275,505" class="flow-arrow" class:active={isPump2Active} />
+		<line
+			x1={pump2.x + 40}
+			y1={pump2.y}
+			x2={k2.x - 30}
+			y2={pump2.y}
+			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<polygon
+			points={`${k2.x - 35},${pump2.y - 5} ${k2.x - 25},${pump2.y} ${k2.x - 35},${pump2.y + 5}`}
+			class="flow-arrow"
+			class:active={isPump2Active}
+		/>
 
 		<!-- CHECK VALVE K2 -->
 		<g class="valve check-valve" class:active={isPump2Active}>
-			<rect x="290" y="480" width="40" height="40" rx="5" class="valve-body" />
-			<path d="M 300 500 L 320 490 L 320 510 Z" fill="#fff" />
-			<text x="310" y="535" text-anchor="middle" class="valve-label">К2</text>
+			<rect x={k2.x - 20} y={k2.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<path
+				d={`M ${k2.x - 10} ${k2.y} L ${k2.x + 10} ${k2.y - 10} L ${k2.x + 10} ${k2.y + 10} Z`}
+				fill="#fff"
+			/>
+			<text x={k2.x} y={k2.y + 35} text-anchor="middle" class="valve-label">К2</text>
 			{#if results}
-				<text x="310" y="550" text-anchor="middle" class="valve-info">
+				<text x={k2.x} y={k2.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.check_valve_k2.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
 		<!-- PIPE AFTER K2 -->
-		<line x1="330" y1="500" x2="420" y2="500" class="pipe" class:active={isPump2Active} />
-		<polygon points="415,495 425,500 415,505" class="flow-arrow" class:active={isPump2Active} />
+		<line
+			x1={k2.x + 20}
+			y1={k2.y}
+			x2={z2.x - 20}
+			y2={z2.y}
+			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<polygon
+			points={`${z2.x - 25},${z2.y - 5} ${z2.x - 15},${z2.y} ${z2.x - 25},${z2.y + 5}`}
+			class="flow-arrow"
+			class:active={isPump2Active}
+		/>
 
 		<!-- GATE VALVE Z2 -->
 		<g class="valve gate-valve" class:active={isPump2Active}>
-			<rect x="430" y="480" width="40" height="40" rx="5" class="valve-body" />
-			<rect x="445" y="485" width="10" height="30" fill="#fff" />
-			<text x="450" y="535" text-anchor="middle" class="valve-label">З2</text>
+			<rect x={z2.x - 20} y={z2.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect x={z2.x - 5} y={z2.y - 15} width="10" height="30" fill="#fff" />
+			<text x={z2.x} y={z2.y + 35} text-anchor="middle" class="valve-label">З2</text>
 			{#if results}
-				<text x="450" y="550" text-anchor="middle" class="valve-info">
+				<text x={z2.x} y={z2.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.gate_valve_z2.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
 		<!-- PIPE TO MANIFOLD FROM LINE 2 -->
-		<line x1="470" y1="500" x2="550" y2="400" class="pipe" class:active={isPump2Active} />
-		<polygon points="545,395 555,400 545,405" class="flow-arrow" class:active={isPump2Active} />
+		<line
+			x1={z2.x + 20}
+			y1={z2.y}
+			x2={manifold.x - manifold.width / 2 - 5}
+			y2={manifold.y + 50}
+			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<polygon
+			points={`${manifold.x - manifold.width / 2 - 10},${manifold.y + 45} ${manifold.x - manifold.width / 2},${manifold.y + 50} ${manifold.x - manifold.width / 2 - 10},${manifold.y + 55}`}
+			class="flow-arrow"
+			class:active={isPump2Active}
+		/>
 
 		<!-- MANIFOLD (ГРЕБЕНКА) -->
 		<g class="manifold" class:active={isManifoldActive}>
-			<rect x="560" y="280" width="90" height="140" rx="8" class="manifold-body" />
-			<text x="605" y="360" text-anchor="middle" class="manifold-label">Гребенка</text>
+			<rect
+				x={manifold.x - 45}
+				y={manifold.y - 100}
+				width={manifold.width}
+				height={manifold.height}
+				rx="8"
+				class="manifold-body"
+			/>
+			<text x={manifold.x} y={manifold.y} text-anchor="middle" class="manifold-label">Гребенка</text
+			>
 		</g>
+
+		<!-- PIPE FROM MANIFOLD TO Z3 -->
+		<line
+			x1={manifoldPipeStart}
+			y1={z3.y}
+			x2={z3.x - 20}
+			y2={z3.y}
+			class="pipe"
+			class:active={isManifoldActive}
+		/>
 
 		<!-- GATE VALVE Z3 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
-			<rect x="690" y="290" width="40" height="40" rx="5" class="valve-body" />
-			<rect x="665" y="295" width="10" height="30" fill="#fff" />
-			<text x="670" y="345" text-anchor="middle" class="valve-label">З3</text>
+			<rect
+				x={z3.x - 20}
+				y={z3.y - 20}
+				width={valveWidth}
+				height={valveHeight}
+				rx="5"
+				class="valve-body"
+			/>
+			<rect x={z3.x - 5} y={z3.y - 15} width="10" height="30" fill="#fff" />
+			<text x={z3.x} y={z3.y + 35} text-anchor="middle" class="valve-label">З3</text>
 			{#if results}
-				<text x="670" y="360" text-anchor="middle" class="valve-info">
+				<text x={z3.x} y={z3.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.gate_valve_z3.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
-		<!-- PIPE FROM MANIFOLD TO Z3 -->
-		<line x1="700" y1="310" x2="650" y2="310" class="pipe" class:active={isManifoldActive} />
+		<!-- PIPE FROM MANIFOLD TO Z4 -->
+		<line
+			x1={manifoldPipeStart}
+			y1={z4.y}
+			x2={z4.x - 20}
+			y2={z4.y}
+			class="pipe"
+			class:active={isManifoldActive}
+		/>
 
 		<!-- GATE VALVE Z4 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
-			<rect x="650" y="340" width="40" height="40" rx="5" class="valve-body" />
-			<rect x="665" y="345" width="10" height="30" fill="#fff" />
-			<text x="670" y="395" text-anchor="middle" class="valve-label">З4</text>
+			<rect
+				x={z4.x - 20}
+				y={z4.y - 20}
+				width={valveWidth}
+				height={valveHeight}
+				rx="5"
+				class="valve-body"
+			/>
+			<rect x={z4.x - 5} y={z4.y - 15} width="10" height="30" fill="#fff" />
+			<text x={z4.x} y={z4.y + 35} text-anchor="middle" class="valve-label">З4</text>
 			{#if results}
-				<text x="670" y="410" text-anchor="middle" class="valve-info">
+				<text x={z4.x} y={z4.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.gate_valve_z4.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
-		<!-- PIPE FROM MANIFOLD TO Z4 -->
-		<line x1="620" y1="360" x2="650" y2="360" class="pipe" class:active={isManifoldActive} />
+		<!-- PIPE FROM MANIFOLD TO Z5 -->
+		<line
+			x1={manifoldPipeStart}
+			y1={z5.y}
+			x2={z5.x - 20}
+			y2={z5.y}
+			class="pipe"
+			class:active={isManifoldActive}
+		/>
 
 		<!-- GATE VALVE Z5 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
-			<rect x="650" y="370" width="40" height="40" rx="5" class="valve-body" />
-			<rect x="665" y="375" width="10" height="30" fill="#fff" />
-			<text x="670" y="425" text-anchor="middle" class="valve-label">З5</text>
+			<rect
+				x={z5.x - 20}
+				y={z5.y - 20}
+				width={valveWidth}
+				height={valveHeight}
+				rx="5"
+				class="valve-body"
+			/>
+			<rect x={z5.x - 5} y={z5.y - 15} width="10" height="30" fill="#fff" />
+			<text x={z5.x} y={z5.y + 35} text-anchor="middle" class="valve-label">З5</text>
 			{#if results}
-				<text x="670" y="440" text-anchor="middle" class="valve-info">
+				<text x={z5.x} y={z5.y + 50} text-anchor="middle" class="valve-info">
 					⌀{results.gate_valve_z5.diameter_mm.toFixed(0)}
 				</text>
 			{/if}
 		</g>
 
-		<!-- PIPE FROM MANIFOLD TO Z5 -->
-		<line x1="620" y1="380" x2="650" y2="380" class="pipe" class:active={isManifoldActive} />
-
 		<!-- OUTPUT PIPES -->
 		<line
-			x1="690"
-			y1="310"
-			x2="800"
-			y2="310"
+			x1={z3.x + 20}
+			y1={z3.y}
+			x2={output.x - 50}
+			y2={z3.y}
 			class="pipe output-pipe"
 			class:active={isManifoldActive}
 		/>
-		<polygon points="795,305 805,310 795,315" class="flow-arrow" class:active={isManifoldActive} />
+		<polygon
+			points={`${output.x - 55},${z3.y - 5} ${output.x - 45},${z3.y} ${output.x - 55},${z3.y + 5}`}
+			class="flow-arrow"
+			class:active={isManifoldActive}
+		/>
 
 		<line
-			x1="690"
-			y1="360"
-			x2="800"
-			y2="360"
+			x1={z4.x + 20}
+			y1={z4.y}
+			x2={output.x - 50}
+			y2={z4.y}
 			class="pipe output-pipe"
 			class:active={isManifoldActive}
 		/>
-		<polygon points="795,355 805,360 795,365" class="flow-arrow" class:active={isManifoldActive} />
+		<polygon
+			points={`${output.x - 55},${z4.y - 5} ${output.x - 45},${z4.y} ${output.x - 55},${z4.y + 5}`}
+			class="flow-arrow"
+			class:active={isManifoldActive}
+		/>
 
 		<line
-			x1="690"
-			y1="390"
-			x2="800"
-			y2="390"
+			x1={z5.x + 20}
+			y1={z5.y}
+			x2={output.x - 50}
+			y2={z5.y}
 			class="pipe output-pipe"
 			class:active={isManifoldActive}
 		/>
-		<polygon points="795,385 805,390 795,395" class="flow-arrow" class:active={isManifoldActive} />
+		<polygon
+			points={`${output.x - 55},${z5.y - 5} ${output.x - 45},${z5.y} ${output.x - 55},${z5.y + 5}`}
+			class="flow-arrow"
+			class:active={isManifoldActive}
+		/>
 
 		<!-- OUTPUT LABEL -->
-		<text x="850" y="355" text-anchor="middle" class="output-label">Выход</text>
+		<text x={output.x} y={manifold.y + 5} text-anchor="middle" class="output-label">Выход</text>
 
 		<!-- Legend -->
 		<g class="legend">
@@ -364,18 +519,7 @@
 
 	.flow-arrow.active {
 		fill: #20a13a;
-		/* animation: pulse 1.5s infinite; */
 	}
-
-	/* @keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0.5;
-		}
-	} */
 
 	/* Legend */
 	.legend-title {
