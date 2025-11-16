@@ -204,7 +204,7 @@
 
 	/* Sticky container for diagram */
 	.diagram-sticky {
-		position: sticky;
+		/* position: sticky; */
 		top: 0;
 		height: 100vh;
 		display: flex;

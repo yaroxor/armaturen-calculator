@@ -3,6 +3,7 @@
 
 	export let results: CalculatorResults | null = null;
 
+	$: hasResults = results !== null;
 	$: isPump1Active = results && results.pump1.flow_m3_per_s > 0;
 	$: isPump2Active = results && results.pump2.flow_m3_per_s > 0;
 	$: isManifoldActive = isPump1Active || isPump2Active;
@@ -10,6 +11,9 @@
 
 <div class="diagram-wrapper">
 	<h3>Схема установки</h3>
+	{#if !hasResults}
+		<p class="instruction-text">Заполните форму и нажмите "Рассчитать"</p>
+	{/if}
 
 	<svg viewBox="0 0 1000 700" class="schema">
 		<!-- Background -->
@@ -124,13 +128,13 @@
 
 		<!-- MANIFOLD (ГРЕБЕНКА) -->
 		<g class="manifold" class:active={isManifoldActive}>
-			<rect x="560" y="280" width="60" height="140" rx="8" class="manifold-body" />
-			<text x="590" y="360" text-anchor="middle" class="manifold-label">Гребенка</text>
+			<rect x="560" y="280" width="90" height="140" rx="8" class="manifold-body" />
+			<text x="605" y="360" text-anchor="middle" class="manifold-label">Гребенка</text>
 		</g>
 
 		<!-- GATE VALVE Z3 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
-			<rect x="650" y="290" width="40" height="40" rx="5" class="valve-body" />
+			<rect x="690" y="290" width="40" height="40" rx="5" class="valve-body" />
 			<rect x="665" y="295" width="10" height="30" fill="#fff" />
 			<text x="670" y="345" text-anchor="middle" class="valve-label">З3</text>
 			{#if results}
@@ -141,7 +145,7 @@
 		</g>
 
 		<!-- PIPE FROM MANIFOLD TO Z3 -->
-		<line x1="620" y1="310" x2="650" y2="310" class="pipe" class:active={isManifoldActive} />
+		<line x1="700" y1="310" x2="650" y2="310" class="pipe" class:active={isManifoldActive} />
 
 		<!-- GATE VALVE Z4 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
@@ -227,9 +231,16 @@
 	}
 
 	h3 {
-		margin: 0 0 1rem 0;
+		margin: 0 0 0.5rem 0;
 		color: #333;
 		font-size: 1.3rem;
+	}
+
+	.instruction-text {
+		margin: 0 0 1rem 0;
+		color: #999;
+		font-size: 1rem;
+		font-style: italic;
 	}
 
 	.schema {
@@ -247,8 +258,13 @@
 		fill: #333;
 	}
 
+	.valve-label {
+		font-size: 16px;
+		font-weight: 700;
+		fill: #000;
+	}
+
 	.pump-label,
-	.valve-label,
 	.manifold-label {
 		font-size: 16px;
 		font-weight: 700;
@@ -322,14 +338,14 @@
 	/* Pipe styles */
 	.pipe {
 		stroke: #ccc;
-		stroke-width: 6;
+		stroke-width: 4;
 		stroke-linecap: round;
 		transition: all 0.3s;
 	}
 
 	.pipe.active {
 		stroke: #20a13a;
-		stroke-width: 8;
+		stroke-width: 4;
 	}
 
 	.output-pipe {
@@ -348,10 +364,10 @@
 
 	.flow-arrow.active {
 		fill: #20a13a;
-		animation: pulse 1.5s infinite;
+		/* animation: pulse 1.5s infinite; */
 	}
 
-	@keyframes pulse {
+	/* @keyframes pulse {
 		0%,
 		100% {
 			opacity: 1;
@@ -359,7 +375,7 @@
 		50% {
 			opacity: 0.5;
 		}
-	}
+	} */
 
 	/* Legend */
 	.legend-title {
