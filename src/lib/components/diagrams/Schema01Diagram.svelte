@@ -514,7 +514,7 @@
 	/* Flow arrow styles */
 	.flow-arrow {
 		fill: #ccc;
-		transition: all 0.3s;
+		/* transition: all 0.3s; */
 	}
 
 	.flow-arrow.active {
