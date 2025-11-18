@@ -8,21 +8,21 @@
 	$: isPump2Active = results && results.pump2.flow_m3_per_s > 0;
 	$: isManifoldActive = isPump1Active || isPump2Active;
 
-	const pump1 = { x: 140, y: 200 };
-	const pump2 = { x: 140, y: 500 };
+	const pump1 = { x: 140, y: 200, width: 80, height: 100 };
+	const pump2 = { x: 140, y: 500, width: 80, height: 100 };
 
-	const k1 = { x: 310, y: 200 };
-	const z1 = { x: 450, y: 200 };
+	const k1 = { x: 310, y: 200, width: 40, height: 40 };
+	const k2 = { x: 310, y: 500, width: 40, height: 40 };
 
-	const k2 = { x: 310, y: 500 };
-	const z2 = { x: 450, y: 500 };
+	const z1 = { x: 450, y: 200, width: 40, height: 40 };
+	const z2 = { x: 450, y: 500, width: 40, height: 40 };
 
 	// Vertical collector line
 	const collector = { x: 580, yTop: 10, yBottom: 580 };
 
-	const z3 = { x: collector.x, y: 120 };
-	const z4 = { x: collector.x, y: 350 };
-	const z5 = { x: collector.x, y: 570 };
+	const z3 = { x: collector.x, y: 120, width: 40, height: 40 };
+	const z4 = { x: collector.x, y: 350, width: 40, height: 40 };
+	const z5 = { x: collector.x, y: 570, width: 40, height: 40 };
 
 	const manifold = { x: 565, y: 350, width: 90, height: 600 };
 
@@ -51,8 +51,8 @@
 		<!-- PUMP 1 -->
 		<g class="pump" class:active={isPump1Active}>
 			<!-- Pump body -->
-			<rect x={pump1.x - 40} y={pump1.y - 50} width="80" height="100" rx="10" class="pump-body" />
-			<circle cx={pump1.x} cy={pump1.y} r="35" class="pump-impeller" />
+			<rect x={pump1.x - pump1.width / 2} y={pump1.y - pump1.height / 2} width={pump1.width} height={pump1.height} rx="10" class="pump-body" />
+			<circle cx={pump1.x} cy={pump1.y} r={(pump1.width / 2) * 0.9} class="pump-impeller" />
 
 			<!-- Pump label -->
 			<text x={pump1.x} y={pump1.y + 5} text-anchor="middle" class="pump-label">Н1</text>
@@ -66,8 +66,8 @@
 		<!-- PUMP 2 -->
 		<g class="pump" class:active={isPump2Active}>
 			<!-- Pump body -->
-			<rect x={pump2.x - 40} y={pump2.y - 50} width="80" height="100" rx="10" class="pump-body" />
-			<circle cx={pump2.x} cy={pump2.y} r="35" class="pump-impeller" />
+			<rect x={pump2.x - pump2.width / 2} y={pump2.y - pump2.height / 2} width={pump2.width} height={pump2.height} rx="10" class="pump-body" />
+			<circle cx={pump2.x} cy={pump2.y} r={(pump2.width / 2) * 0.9} class="pump-impeller" />
 
 			<!-- Pump label -->
 			<text x={pump2.x} y={pump2.y + 5} text-anchor="middle" class="pump-label">Н2</text>
@@ -80,37 +80,34 @@
 
 		<!-- PIPE FROM PUMP 1 -->
 		<line
-			x1={pump1.x + 40}
+			x1={pump1.x + pump1.width / 2}
 			y1={pump1.y}
-			x2={k1.x - 30}
+			x2={k1.x - k1.width / 2}
 			y2={pump1.y}
 			class="pipe"
-			class:active={isPump1Active}
-		/>
-		<polygon
-			points={`${k1.x - 35},${pump1.y - 5} ${k1.x - 20},${pump1.y} ${k1.x - 35},${pump1.y + 5}`}
-			class="flow-arrow"
 			class:active={isPump1Active}
 		/>
 
 		<!-- PIPE FROM PUMP 2 -->
 		<line
-			x1={pump2.x + 40}
+			x1={pump2.x + pump2.width / 2}
 			y1={pump2.y}
-			x2={k2.x - 30}
+			x2={k2.x - k2.width / 2}
 			y2={pump2.y}
 			class="pipe"
-			class:active={isPump2Active}
-		/>
-		<polygon
-			points={`${k2.x - 35},${pump2.y - 5} ${k2.x - 20},${pump2.y} ${k2.x - 35},${pump2.y + 5}`}
-			class="flow-arrow"
 			class:active={isPump2Active}
 		/>
 
 		<!-- CHECK VALVE K1 -->
 		<g class="valve check-valve" class:active={isPump1Active}>
-			<rect x={k1.x - 20} y={k1.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect
+				x={k1.x - k1.width / 2}
+				y={k1.y - k1.height / 2}
+				width={k1.width}
+				height={k1.height}
+				rx="5"
+				class="valve-body"
+			/>
 			<path
 				d={`M ${k1.x - 10} ${k1.y} L ${k1.x + 10} ${k1.y - 10} L ${k1.x + 10} ${k1.y + 10} Z`}
 				fill="#fff"
@@ -125,7 +122,7 @@
 
 		<!-- CHECK VALVE K2 -->
 		<g class="valve check-valve" class:active={isPump2Active}>
-			<rect x={k2.x - 20} y={k2.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect x={k2.x - k2.width / 2} y={k2.y - k2.height / 2} width={k2.width} height={k2.height} rx="5" class="valve-body" />
 			<path
 				d={`M ${k2.x - 10} ${k2.y} L ${k2.x + 10} ${k2.y - 10} L ${k2.x + 10} ${k2.y + 10} Z`}
 				fill="#fff"
@@ -140,37 +137,27 @@
 
 		<!-- PIPE AFTER K1 -->
 		<line
-			x1={k1.x + 20}
+			x1={k1.x + k1.width / 2}
 			y1={k1.y}
-			x2={z1.x - 30}
+			x2={z1.x - z1.width / 2}
 			y2={z1.y}
 			class="pipe"
-			class:active={isPump1Active}
-		/>
-		<polygon
-			points={`${z1.x - 35},${z1.y - 5} ${z1.x - 20},${z1.y} ${z1.x - 35},${z1.y + 5}`}
-			class="flow-arrow"
 			class:active={isPump1Active}
 		/>
 
 		<!-- PIPE AFTER K2 -->
 		<line
-			x1={k2.x + 20}
+			x1={k2.x + k2.width / 2}
 			y1={k2.y}
-			x2={z2.x - 30}
+			x2={z2.x - z2.width / 2}
 			y2={z2.y}
 			class="pipe"
-			class:active={isPump2Active}
-		/>
-		<polygon
-			points={`${z2.x - 35},${z2.y - 5} ${z2.x - 20},${z2.y} ${z2.x - 35},${z2.y + 5}`}
-			class="flow-arrow"
 			class:active={isPump2Active}
 		/>
 
 		<!-- GATE VALVE Z1 -->
 		<g class="valve gate-valve" class:active={isPump1Active}>
-			<rect x={z1.x - 20} y={z1.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect x={z1.x - z1.width / 2} y={z1.y - z1.height / 2} width={z1.width} height={z1.height} rx="5" class="valve-body" />
 			<rect x={z1.x - 5} y={z1.y - 15} width="10" height="30" fill="#fff" />
 			<text x={z1.x} y={z1.y + 35} text-anchor="middle" class="valve-label">З1</text>
 			{#if results}
@@ -182,7 +169,7 @@
 
 		<!-- GATE VALVE Z2 -->
 		<g class="valve gate-valve" class:active={isPump2Active}>
-			<rect x={z2.x - 20} y={z2.y - 20} width="40" height="40" rx="5" class="valve-body" />
+			<rect x={z2.x - z2.width / 2} y={z2.y - z2.height / 2} width={z2.width} height={z2.height} rx="5" class="valve-body" />
 			<rect x={z2.x - 5} y={z2.y - 15} width="10" height="30" fill="#fff" />
 			<text x={z2.x} y={z2.y + 35} text-anchor="middle" class="valve-label">З2</text>
 			{#if results}
@@ -212,31 +199,21 @@
 
 		<!-- PIPE TO COLLECTOR FROM LINE 1 -->
 		<line
-			x1={z1.x + 20}
+			x1={z1.x + z1.width / 2}
 			y1={z1.y}
 			x2={collector.x}
 			y2={z1.y}
 			class="pipe"
 			class:active={isPump1Active}
 		/>
-		<polygon
-			points={`${collector.x - 10},${z1.y - 5} ${collector.x},${z1.y} ${collector.x - 10},${z1.y + 5}`}
-			class="flow-arrow"
-			class:active={isPump1Active}
-		/>
 
 		<!-- PIPE TO COLLECTOR FROM LINE 2 -->
 		<line
-			x1={z2.x + 20}
+			x1={z2.x + z2.width / 2}
 			y1={z2.y}
 			x2={collector.x}
 			y2={z2.y}
 			class="pipe"
-			class:active={isPump2Active}
-		/>
-		<polygon
-			points={`${collector.x - 10},${z2.y - 5} ${collector.x},${z2.y} ${collector.x - 10},${z2.y + 5}`}
-			class="flow-arrow"
 			class:active={isPump2Active}
 		/>
 
@@ -254,8 +231,8 @@
 		<!-- GATE VALVE Z3 -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
-				x={z3.x - 20}
-				y={z3.y - 20}
+				x={z3.x - z3.width / 2}
+				y={z3.y - z3.height / 2}
 				width={valveWidth}
 				height={valveHeight}
 				rx="5"
@@ -273,8 +250,8 @@
 		<!-- GATE VALVE З4 (on collector, between pump lines) -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
-				x={z4.x - 20}
-				y={z4.y - 20}
+				x={z4.x - z4.width / 2}
+				y={z4.y - z4.height / 2}
 				width={valveWidth}
 				height={valveHeight}
 				rx="5"
@@ -292,8 +269,8 @@
 		<!-- GATE VALVE Z5 (at bottom of collector) -->
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
-				x={z5.x - 20}
-				y={z5.y - 20}
+				x={z5.x - z5.width / 2}
+				y={z5.y - z5.height / 2}
 				width={valveWidth}
 				height={valveHeight}
 				rx="5"
@@ -311,7 +288,7 @@
 		<!-- OUTPUTS -->
 		<!-- OUTPUT PIPE FROM Z5 -->
 		<line
-			x1={z5.x + 20}
+			x1={z5.x + z5.width / 2}
 			y1={z5.y}
 			x2={output.x - 50}
 			y2={z5.y}
@@ -326,7 +303,7 @@
 		<text x={output.x} y={z5.y + 5} text-anchor="middle" class="output-label">Выход</text>
 		<!-- OUTPUT PIPE FROM Z3 -->
 		<line
-			x1={z3.x + 20}
+			x1={z3.x + z3.width / 2}
 			y1={z3.y}
 			x2={output.x - 50}
 			y2={z3.y}
