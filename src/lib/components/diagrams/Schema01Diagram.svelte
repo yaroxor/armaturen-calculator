@@ -319,11 +319,11 @@
 
 		<!-- Legend -->
 		<g class="legend">
-			<text x="50" y="650" class="legend-title">Обозначения:</text>
-			<text x="50" y="670" class="legend-text">Н - Насос</text>
-			<text x="200" y="670" class="legend-text">К - Обратный клапан</text>
-			<text x="400" y="670" class="legend-text">З - Задвижка</text>
-			<text x="600" y="670" class="legend-text">⌀ - Диаметр (мм)</text>
+			<text x="50" y="700" class="legend-title">Обозначения:</text>
+			<text x="50" y="730" class="legend-text">Н - Насос</text>
+			<text x="200" y="730" class="legend-text">К - Обратный клапан</text>
+			<text x="400" y="730" class="legend-text">З - Задвижка</text>
+			<text x="600" y="730" class="legend-text">⌀ - Диаметр (мм)</text>
 		</g>
 	</svg>
 </div>
@@ -334,17 +334,26 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		--color-bg: #f8f9fa;
+		--color-border: #ddd;
+		--color-gray-light: #ccc;
+		--color-gray: #999;
+		--color-gray-dark: #666;
+		--color-accent: #4a90e2;
+		--color-component: #20a13a;
+		--color-accent-dark: #1a8030;
+		--transition: all 0.3s;
 	}
 
-	h3 {
+	/* h3 {
 		margin: 0 0 0.5rem 0;
-		color: #333;
+		color: var(--color-gray-dark);
 		font-size: 1.3rem;
-	}
+	} */
 
 	.instruction-text {
 		margin: 0 0 1rem 0;
-		color: #999;
+		color: var(--color-gray-dark);
 		font-size: 1rem;
 		font-style: italic;
 	}
@@ -353,150 +362,117 @@
 		width: 100%;
 		height: 100%;
 		flex: 1;
-		border: 1px solid #ddd;
+		border: 1px solid var(--color-border);
 		border-radius: 4px;
 	}
 
-	/* Text styles */
 	.title {
 		font-size: 20px;
 		font-weight: 600;
-		fill: #333;
+		fill: var(--color-gray-dark);
+	}
+
+	.valve-label,
+	.manifold-label,
+	.pump-label {
+		font-size: 16px;
+		font-weight: 700;
 	}
 
 	.valve-label,
 	.manifold-label {
-		font-size: 16px;
-		font-weight: 700;
-		fill: #000;
+		fill: var(--color-gray-dark);
 	}
 
 	.pump-label {
-		font-size: 16px;
-		font-weight: 700;
-		fill: #fff;
+		fill: var(--color-bg);
 	}
 
 	.component-info,
-	.valve-info {
+	.valve-info,
+	.legend-text {
 		font-size: 12px;
-		fill: #666;
+		fill: var(--color-gray-dark);
 		font-weight: 500;
 	}
 
 	.output-label {
 		font-size: 18px;
 		font-weight: 600;
-		fill: #20a13a;
+		fill: var(--color-accent);
 	}
 
-	/* Pump styles */
-	.pump-body {
-		fill: #ccc;
-		stroke: #999;
-		stroke-width: 2;
-		transition: all 0.3s;
-	}
-
-	.pump-impeller {
-		fill: #999;
-		stroke: #666;
-		stroke-width: 2;
-		transition: all 0.3s;
-	}
-
-	.pump.active .pump-body {
-		fill: #20a13a;
-		stroke: #1a8030;
-	}
-
-	.pump.active .pump-impeller {
-		fill: #178028;
-		stroke: #1a8030;
-	}
-
-	/* Valve styles */
-	.valve-body {
-		fill: #ccc;
-		stroke: #999;
-		stroke-width: 2;
-		transition: all 0.3s;
-	}
-
-	.valve.active .valve-body {
-		fill: #4a90e2;
-		stroke: #357abd;
-	}
-
-	/* Manifold styles */
-	.manifold-body {
-		fill: #f8f9fa;
-		stroke: #999;
-		stroke-width: 3;
-		transition: all 0.3s;
-	}
-
-	.manifold.active .manifold-body {
-		fill: #f8f9fa;
-		stroke: #f57c00;
-	}
-
-	/* Collector pipe style */
-	.collector-pipe {
-		stroke: #ccc;
-		stroke-width: 6;
-		stroke-linecap: round;
-		transition: all 0.3s;
-	}
-
-	.collector-pipe.active {
-		stroke: #20a13a;
-	}
-
-	/* Pipe styles */
-	.pipe {
-		stroke: #ccc;
-		stroke-width: 4;
-		stroke-linecap: round;
-		transition: all 0.3s;
-	}
-
-	.pipe.active {
-		stroke: #20a13a;
-		stroke-width: 4;
-	}
-
-	.output-pipe {
-		stroke: #ddd;
-	}
-
-	.output-pipe.active {
-		stroke: #20a13a;
-	}
-
-	/* Flow arrow styles */
-	.flow-arrow {
-		fill: #ccc;
-		/* transition: all 0.3s; */
-	}
-
-	.flow-arrow.active {
-		fill: #20a13a;
-	}
-
-	/* Legend */
 	.legend-title {
 		font-size: 14px;
 		font-weight: 600;
-		fill: #333;
+		fill: var(--color-gray-dark);
 	}
 
-	.legend-text {
-		font-size: 12px;
-		fill: #666;
+	.pump-body,
+	.valve-body {
+		fill: var(--color-gray-light);
+		stroke: var(--color-gray);
+		stroke-width: 2;
+		transition: var(--transition);
 	}
 
-	/* Responsive */
+	.pump-impeller {
+		fill: var(--color-gray);
+		stroke: var(--color-gray-dark);
+		stroke-width: 2;
+		transition: var(--transition);
+	}
+
+	.manifold-body {
+		fill: var(--color-bg);
+		stroke: var(--color-gray);
+		stroke-width: 3;
+		transition: var(--transition);
+	}
+
+	.pump.active .pump-body {
+		fill: var(--color-component);
+		stroke: var(--color-accent-dark);
+	}
+
+	.pump.active .pump-impeller {
+		fill: var(--color-accent-dark);
+		stroke: var(--color-accent-dark);
+	}
+
+	.valve.active .valve-body {
+		fill: var(--color-component);
+		stroke: var(--color-accent-dark);
+	}
+
+	.manifold.active .manifold-body {
+		stroke: var(--color-accent-dark);
+	}
+
+	.pipe,
+	.collector-pipe,
+	.output-pipe {
+		stroke: var(--color-gray-light);
+		stroke-width: 4;
+		stroke-linecap: round;
+		transition: var(--transition);
+	}
+
+	.pipe.active,
+	.output-pipe.active,
+	.collector-pipe.active {
+		stroke: var(--color-accent);
+	}
+
+	.flow-arrow {
+		fill: var(--color-gray-light);
+		transition: var(--transition);
+	}
+
+	.flow-arrow.active {
+		fill: var(--color-accent);
+	}
+
 	@media (max-width: 768px) {
 		.schema {
 			height: 400px;
