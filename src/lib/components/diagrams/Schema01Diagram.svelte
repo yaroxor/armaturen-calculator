@@ -39,11 +39,11 @@
 
 	const output = {
 		x: 790,
-		pipeOffset: 35,
+		pipeOffset: 40,
 		arrow: {
-			lead: 5,
-			length: 12,
-			halfHeight: 5
+			lead: 10,
+			length: 20,
+			halfHeight: 12
 		},
 		labelOffsetY: 5
 	};
@@ -92,6 +92,14 @@
 			class="pipe"
 			class:active={isPump1Active}
 		/>
+		<line
+			x1={pump1.x + pump1.width / 2}
+			y1={pump1.y}
+			x2={k1.x - valveWidth / 2}
+			y2={pump1.y}
+			class="flow-indicator"
+			class:active={isPump1Active}
+		/>
 
 		<!-- PIPE FROM PUMP 2 -->
 		<line
@@ -100,6 +108,14 @@
 			x2={k2.x - valveWidth / 2}
 			y2={pump2.y}
 			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<line
+			x1={pump2.x + pump2.width / 2}
+			y1={pump2.y}
+			x2={k2.x - valveWidth / 2}
+			y2={pump2.y}
+			class="flow-indicator"
 			class:active={isPump2Active}
 		/>
 
@@ -172,6 +188,14 @@
 			class="pipe"
 			class:active={isPump1Active}
 		/>
+		<line
+			x1={k1.x + valveWidth / 2}
+			y1={k1.y}
+			x2={z1.x - valveWidth / 2}
+			y2={z1.y}
+			class="flow-indicator"
+			class:active={isPump1Active}
+		/>
 
 		<!-- PIPE AFTER K2 -->
 		<line
@@ -180,6 +204,14 @@
 			x2={z2.x - valveWidth / 2}
 			y2={z2.y}
 			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<line
+			x1={k2.x + valveWidth / 2}
+			y1={k2.y}
+			x2={z2.x - valveWidth / 2}
+			y2={z2.y}
+			class="flow-indicator"
 			class:active={isPump2Active}
 		/>
 
@@ -257,13 +289,40 @@
 			>
 		</g>
 
+		<!-- VERTICAL COLLECTOR LINE -->
+		<line
+			x1={collector.x}
+			y1={z3.y + valveHeight / 2}
+			x2={collector.x}
+			y2={z5.y + valveHeight / 2}
+			class="pipe collector-pipe"
+			class:active={isManifoldActive}
+			stroke-width="6"
+		/>
+		<line
+			x1={collector.x}
+			y1={z3.y + valveHeight / 2}
+			x2={collector.x}
+			y2={z5.y + valveHeight / 2}
+			class="flow-indicator"
+			class:active={isManifoldActive}
+		/>
+
 		<!-- PIPE TO COLLECTOR FROM LINE 1 -->
+		<line
+			x1={z1.x + valveWidth / 2}
+			y1={z1.y}
+			x2={collector.x - 3}
+			y2={z1.y}
+			class="pipe"
+			class:active={isPump1Active}
+		/>
 		<line
 			x1={z1.x + valveWidth / 2}
 			y1={z1.y}
 			x2={collector.x}
 			y2={z1.y}
-			class="pipe"
+			class="flow-indicator"
 			class:active={isPump1Active}
 		/>
 
@@ -271,9 +330,17 @@
 		<line
 			x1={z2.x + valveWidth / 2}
 			y1={z2.y}
-			x2={collector.x}
+			x2={collector.x - 3}
 			y2={z2.y}
 			class="pipe"
+			class:active={isPump2Active}
+		/>
+		<line
+			x1={z2.x + valveWidth / 2}
+			y1={z2.y}
+			x2={collector.x}
+			y2={z2.y}
+			class="flow-indicator"
 			class:active={isPump2Active}
 		/>
 
@@ -361,17 +428,6 @@
 			{/if}
 		</g>
 
-		<!-- VERTICAL COLLECTOR LINE -->
-		<line
-			x1={collector.x}
-			y1={z3.y + valveHeight / 2}
-			x2={collector.x}
-			y2={z5.y + valveHeight / 2}
-			class="pipe collector-pipe"
-			class:active={isManifoldActive}
-			stroke-width="6"
-		/>
-
 		<!-- OUTPUTS -->
 		<!-- OUTPUT PIPE FROM Z3 -->
 		<line
@@ -380,6 +436,14 @@
 			x2={output.x - output.pipeOffset}
 			y2={z3.y + valveHeight / 2}
 			class="pipe output-pipe"
+			class:active={isManifoldActive}
+		/>
+		<line
+			x1={collector.x}
+			y1={z3.y + valveHeight / 2}
+			x2={output.x - output.pipeOffset}
+			y2={z3.y + valveHeight / 2}
+			class="flow-indicator"
 			class:active={isManifoldActive}
 		/>
 		<polygon
@@ -401,6 +465,14 @@
 			x2={output.x - output.pipeOffset}
 			y2={z5.y + valveHeight / 2}
 			class="pipe output-pipe"
+			class:active={isManifoldActive}
+		/>
+		<line
+			x1={collector.x}
+			y1={z5.y + valveHeight / 2}
+			x2={output.x - output.pipeOffset}
+			y2={z5.y + valveHeight / 2}
+			class="flow-indicator"
 			class:active={isManifoldActive}
 		/>
 		<polygon
@@ -591,6 +663,7 @@
 		--color-flow: #3d78d7;
 		--color-component: #20a13a;
 		--color-accent-dark: #146425;
+		--flow-speed: 1.4s;
 		--transition: all 0.3s;
 	}
 
@@ -731,7 +804,7 @@
 	.collector-pipe,
 	.output-pipe {
 		stroke: var(--color-gray-light);
-		stroke-width: 4;
+		stroke-width: 9;
 		stroke-linecap: round;
 		transition: var(--transition);
 	}
@@ -740,6 +813,31 @@
 	.output-pipe.active,
 	.collector-pipe.active {
 		stroke: var(--color-flow);
+	}
+
+	@keyframes pipe-flow {
+		from {
+			stroke-dashoffset: 0;
+		}
+		to {
+			stroke-dashoffset: calc(-1 * (9));
+		}
+	}
+
+	.flow-indicator {
+		stroke: #fff;
+		stroke-width: 4.5;
+		stroke-linecap: round;
+		stroke-dasharray: 6 9;
+		stroke-dashoffset: 0;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		pointer-events: none;
+	}
+
+	.flow-indicator.active {
+		opacity: 1;
+		animation: pipe-flow var(--flow-speed) linear infinite;
 	}
 
 	.flow-arrow {
