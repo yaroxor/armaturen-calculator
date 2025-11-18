@@ -197,7 +197,7 @@
 	/* Right column: fixed diagram (2/3 width) */
 	.diagram-column {
 		flex: 0 0 66.667%;
-		background: #f8f9fa;
+		/* background: #f8f9fa; */
 		border-left: 2px solid #ddd;
 		overflow: hidden;
 	}
