@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ToggleSwitch from '$lib/components/ui/ToggleSwitch.svelte';
 	import type { CalculatorResults } from '$lib/calculators/types';
 
 	export let results: CalculatorResults | null = null;
@@ -13,6 +14,21 @@
 
 	const valveWidth = 50;
 	const valveHeight = 50;
+	let gateValveStates = {
+		z1: true,
+		z2: true,
+		z3: true,
+		z4: true,
+		z5: true
+	};
+
+	const setGateValveState = (id: keyof typeof gateValveStates, state: boolean) => {
+		gateValveStates = { ...gateValveStates, [id]: state };
+	};
+
+	const toggleGateValve = (id: keyof typeof gateValveStates) => {
+		setGateValveState(id, !gateValveStates[id]);
+	};
 
 	const gateIcon = {
 		arrowOffset: 18,
@@ -29,16 +45,12 @@
 	const z2 = { x: 450, y: 500 };
 
 	// Vertical collector line
-	const collector = { x: 580 };
+	const collector = { x: 600 };
 
-	const z3 = { y: 100 };
-	const z4 = { y: 330 };
-	const z5 = { y: 550 };
-
-	const manifold = { x: 565, y: 350, width: 120, height: 600 };
+	const manifold = { x: 520, y: 30, width: 220, height: 620 };
 
 	const output = {
-		x: 790,
+		x: 820,
 		pipeOffset: 40,
 		arrow: {
 			lead: 10,
@@ -47,6 +59,67 @@
 		},
 		labelOffsetY: 5
 	};
+
+	const z3 = { y: 100 };
+	const z4 = { y: 330 };
+	const z5 = { y: 550 };
+
+	const topToggleBlockConfig = {
+		width: 90,
+		height: 50,
+		paddingX: 10,
+		paddingBottom: 30
+	};
+
+	const getGateTopLayout = ({ x, y }: { x: number; y: number }) => {
+		return {
+			block: {
+				x: x - valveWidth / 2 - topToggleBlockConfig.paddingX,
+				y: y - valveHeight / 2 - topToggleBlockConfig.height,
+				width: valveWidth + topToggleBlockConfig.paddingX * 2,
+				height: valveHeight + topToggleBlockConfig.height + topToggleBlockConfig.paddingBottom
+			},
+			toggle: {
+				x: x - topToggleBlockConfig.width / 2,
+				y: y - valveHeight - 15,
+				width: topToggleBlockConfig.width,
+				height: topToggleBlockConfig.height
+			}
+		};
+	};
+
+	const sideToggleBlockConfig = {
+		width: 110,
+		height: 45,
+		paddingLeft: 10,
+		paddingY: 10
+	};
+
+	const getGateSideLayout = ({ x, y }: { x: number; y: number }) => {
+		return {
+			block: {
+				x: x - valveWidth / 2 - sideToggleBlockConfig.paddingLeft - 35,
+				y: y - valveHeight / 2 - sideToggleBlockConfig.paddingY,
+				width: valveWidth + sideToggleBlockConfig.paddingLeft + sideToggleBlockConfig.width,
+				height: valveHeight + sideToggleBlockConfig.paddingY * 2
+			},
+			toggle: {
+				x: x + valveWidth / 4,
+				y: y - valveHeight / 4
+			}
+		};
+	};
+
+	const z1Layout = getGateTopLayout(z1);
+	const z2Layout = getGateTopLayout(z2);
+
+	const z3Center = { x: collector.x, y: z3.y + valveHeight / 2 };
+	const z4Center = { x: collector.x, y: z4.y + valveHeight / 2 };
+	const z5Center = { x: collector.x, y: z5.y + valveHeight / 2 };
+
+	const z3Layout = getGateSideLayout(z3Center);
+	const z4Layout = getGateSideLayout(z4Center);
+	const z5Layout = getGateSideLayout(z5Center);
 
 	const getImpellerTrianglePoints = (pump: typeof pump1) => {
 		const radius = (pump.width / 2) * 0.65;
@@ -148,7 +221,6 @@
 				{/if}
 			</text>
 		</g>
-
 		<!-- PUMP 2 -->
 		<g class="pump" class:active={isPump2Active}>
 			<!-- Pump body -->
@@ -178,7 +250,6 @@
 				{/if}
 			</text>
 		</g>
-
 		<!-- PIPE AFTER K1 -->
 		<line
 			x1={k1.x + valveWidth / 2}
@@ -242,7 +313,6 @@
 				</text>
 			{/if}
 		</g>
-
 		<!-- CHECK VALVE K2 -->
 		<g class="valve check-valve" class:active={isPump2Active}>
 			<rect
@@ -274,16 +344,16 @@
 		<!-- MANIFOLD (ГРЕБЕНКА) -->
 		<g class="manifold" class:active={isManifoldActive}>
 			<rect
-				x={manifold.x - manifold.width / 2}
-				y={manifold.y - manifold.height / 2}
+				x={manifold.x}
+				y={manifold.y}
 				width={manifold.width}
 				height={manifold.height}
 				rx="8"
 				class="manifold-body"
 			/>
 			<text
-				x={manifold.x}
-				y={manifold.y - manifold.height / 2 + 20}
+				x={manifold.x + manifold.width / 2}
+				y={manifold.y + 30}
 				text-anchor="middle"
 				class="manifold-label">Гребенка</text
 			>
@@ -345,6 +415,14 @@
 		/>
 
 		<!-- GATE VALVE Z1 -->
+		<rect
+			class="gate-block"
+			x={z1Layout.block.x}
+			y={z1Layout.block.y}
+			width={z1Layout.block.width}
+			height={z1Layout.block.height}
+			rx="12"
+		/>
 		<g class="valve gate-valve" class:active={isPump1Active}>
 			<rect
 				x={z1.x - valveWidth / 2}
@@ -385,8 +463,29 @@
 				</text>
 			{/if}
 		</g>
-
+		<foreignObject
+			x={z1Layout.toggle.x}
+			y={z1Layout.toggle.y}
+			width={z1Layout.toggle.width}
+			height={z1Layout.toggle.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="З1"
+					checked={gateValveStates.z1}
+					onChange={(detail) => setGateValveState('z1', detail.checked)}
+				/>
+			</div>
+		</foreignObject>
 		<!-- GATE VALVE Z2 -->
+		<rect
+			class="gate-block"
+			x={z2Layout.block.x}
+			y={z2Layout.block.y}
+			width={z2Layout.block.width}
+			height={z2Layout.block.height}
+			rx="12"
+		/>
 		<g class="valve gate-valve" class:active={isPump2Active}>
 			<rect
 				x={z2.x - valveWidth / 2}
@@ -427,7 +526,20 @@
 				</text>
 			{/if}
 		</g>
-
+		<foreignObject
+			x={z2Layout.toggle.x}
+			y={z2Layout.toggle.y}
+			width={z2Layout.toggle.width}
+			height={z2Layout.toggle.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="З2"
+					checked={gateValveStates.z2}
+					onChange={(detail) => setGateValveState('z2', detail.checked)}
+				/>
+			</div>
+		</foreignObject>
 		<!-- OUTPUTS -->
 		<!-- OUTPUT PIPE FROM Z3 -->
 		<line
@@ -489,6 +601,14 @@
 		>
 
 		<!-- GATE VALVE Z3 -->
+		<rect
+			class="gate-block"
+			x={z3Layout.block.x}
+			y={z3Layout.block.y}
+			width={z3Layout.block.width}
+			height={z3Layout.block.height}
+			rx="12"
+		/>
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
 				x={collector.x - valveWidth / 2}
@@ -537,8 +657,30 @@
 				</text>
 			{/if}
 		</g>
+		<foreignObject
+			x={z3Layout.toggle.x}
+			y={z3Layout.toggle.y}
+			width={sideToggleBlockConfig.width}
+			height={sideToggleBlockConfig.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="З3"
+					checked={gateValveStates.z3}
+					onChange={(detail) => setGateValveState('z3', detail.checked)}
+				/>
+			</div>
+		</foreignObject>
 
 		<!-- GATE VALVE З4 (on collector, between pump lines) -->
+		<rect
+			class="gate-block"
+			x={z4Layout.block.x}
+			y={z4Layout.block.y}
+			width={z4Layout.block.width}
+			height={z4Layout.block.height}
+			rx="12"
+		/>
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
 				x={collector.x - valveWidth / 2}
@@ -587,8 +729,30 @@
 				</text>
 			{/if}
 		</g>
+		<foreignObject
+			x={z4Layout.toggle.x}
+			y={z4Layout.toggle.y}
+			width={sideToggleBlockConfig.width}
+			height={sideToggleBlockConfig.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="З4"
+					checked={gateValveStates.z4}
+					onChange={(detail) => setGateValveState('z4', detail.checked)}
+				/>
+			</div>
+		</foreignObject>
 
 		<!-- GATE VALVE Z5 (at bottom of collector) -->
+		<rect
+			class="gate-block"
+			x={z5Layout.block.x}
+			y={z5Layout.block.y}
+			width={z5Layout.block.width}
+			height={z5Layout.block.height}
+			rx="12"
+		/>
 		<g class="valve gate-valve" class:active={isManifoldActive}>
 			<rect
 				x={collector.x - valveWidth / 2}
@@ -637,6 +801,20 @@
 				</text>
 			{/if}
 		</g>
+		<foreignObject
+			x={z5Layout.toggle.x}
+			y={z5Layout.toggle.y}
+			width={sideToggleBlockConfig.width}
+			height={sideToggleBlockConfig.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="З5"
+					checked={gateValveStates.z5}
+					onChange={(detail) => setGateValveState('z5', detail.checked)}
+				/>
+			</div>
+		</foreignObject>
 
 		<!-- Legend -->
 		<g class="legend">
@@ -690,10 +868,15 @@
 	}
 
 	.valve-label,
-	.manifold-label,
 	.pump-label,
 	.output-label {
 		font-size: 16px;
+		font-weight: 700;
+		fill: var(--color-gray-dark);
+	}
+
+	.manifold-label {
+		font-size: 20px;
 		font-weight: 700;
 		fill: var(--color-gray-dark);
 	}
@@ -794,6 +977,19 @@
 	.valve.active .valve-body {
 		fill: var(--color-component);
 		stroke: var(--color-accent-dark);
+	}
+
+	.gate-block {
+		fill: rgba(255, 255, 255, 0.85);
+		stroke: var(--color-border);
+		stroke-width: 1.5;
+	}
+
+	.gate-toggle-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: auto;
 	}
 
 	.manifold.active .manifold-body {
