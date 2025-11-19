@@ -14,13 +14,25 @@
 
 	const valveWidth = 50;
 	const valveHeight = 50;
+
 	let gateValveStates = {
-		z1: true,
-		z2: true,
-		z3: true,
-		z4: true,
-		z5: true
+		z1: false,
+		z2: false,
+		z3: false,
+		z4: false,
+		z5: false
 	};
+	let gateInitialized = false;
+	$: if (results && !gateInitialized) {
+		gateValveStates = {
+			z1: true,
+			z2: true,
+			z3: true,
+			z4: true,
+			z5: true
+		};
+		gateInitialized = true;
+	}
 
 	const setGateValveState = (id: keyof typeof gateValveStates, state: boolean) => {
 		gateValveStates = { ...gateValveStates, [id]: state };
@@ -47,7 +59,7 @@
 	// Vertical collector line
 	const collector = { x: 600 };
 
-	const manifold = { x: 520, y: 30, width: 220, height: 620 };
+	const manifold = { x: 520, y: 30, width: 190, height: 620 };
 
 	const output = {
 		x: 820,
@@ -473,10 +485,12 @@
 				<ToggleSwitch
 					label="З1"
 					checked={gateValveStates.z1}
+					disabled={!hasResults}
 					onChange={(detail) => setGateValveState('z1', detail.checked)}
 				/>
 			</div>
 		</foreignObject>
+
 		<!-- GATE VALVE Z2 -->
 		<rect
 			class="gate-block"
@@ -536,10 +550,12 @@
 				<ToggleSwitch
 					label="З2"
 					checked={gateValveStates.z2}
+					disabled={!hasResults}
 					onChange={(detail) => setGateValveState('z2', detail.checked)}
 				/>
 			</div>
 		</foreignObject>
+
 		<!-- OUTPUTS -->
 		<!-- OUTPUT PIPE FROM Z3 -->
 		<line
@@ -667,6 +683,7 @@
 				<ToggleSwitch
 					label="З3"
 					checked={gateValveStates.z3}
+					disabled={!hasResults}
 					onChange={(detail) => setGateValveState('z3', detail.checked)}
 				/>
 			</div>
@@ -739,6 +756,7 @@
 				<ToggleSwitch
 					label="З4"
 					checked={gateValveStates.z4}
+					disabled={!hasResults}
 					onChange={(detail) => setGateValveState('z4', detail.checked)}
 				/>
 			</div>
@@ -811,6 +829,7 @@
 				<ToggleSwitch
 					label="З5"
 					checked={gateValveStates.z5}
+					disabled={!hasResults}
 					onChange={(detail) => setGateValveState('z5', detail.checked)}
 				/>
 			</div>
