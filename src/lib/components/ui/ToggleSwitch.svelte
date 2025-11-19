@@ -1,7 +1,8 @@
 <script lang="ts">
-	type ToggleChangeDetail = {
-		checked: boolean;
-	};
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
+	type ToggleChangeDetail = { checked: boolean };
 
 	export let checked = false;
 	export let label = '';
@@ -12,6 +13,7 @@
 		if (disabled) return;
 		checked = !checked;
 		onChange?.({ checked });
+		dispatch('change', { checked });
 	};
 
 	const handleKeyDown = (event: KeyboardEvent) => {

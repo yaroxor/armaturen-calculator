@@ -5,15 +5,12 @@
 	export let results: CalculatorResults | null = null;
 
 	$: hasResults = results !== null;
-	$: isPump1Active = results && results.pump1.flow_m3_per_s > 0;
-	$: isPump2Active = results && results.pump2.flow_m3_per_s > 0;
+
+	$: isPump1Active = !!(results && results.pump1.flow_m3_per_s > 0);
+	$: isPump2Active = !!(results && results.pump2.flow_m3_per_s > 0);
+	$: anyPumpActive = isPump1Active || isPump2Active;
+
 	$: isManifoldActive = isPump1Active || isPump2Active;
-
-	const pump1 = { x: 140, y: 200, width: 80, height: 80 };
-	const pump2 = { x: 140, y: 500, width: 80, height: 80 };
-
-	const valveWidth = 50;
-	const valveHeight = 50;
 
 	let gateValveStates = {
 		z1: false,
@@ -23,13 +20,14 @@
 		z5: false
 	};
 	let gateInitialized = false;
-	$: if (results && !gateInitialized) {
+
+	$: if (!gateInitialized && anyPumpActive) {
 		gateValveStates = {
-			z1: true,
-			z2: true,
-			z3: true,
-			z4: true,
-			z5: true
+			z1: isPump1Active,
+			z2: isPump2Active,
+			z3: anyPumpActive,
+			z4: anyPumpActive,
+			z5: anyPumpActive
 		};
 		gateInitialized = true;
 	}
@@ -41,6 +39,12 @@
 	const toggleGateValve = (id: keyof typeof gateValveStates) => {
 		setGateValveState(id, !gateValveStates[id]);
 	};
+
+	const pump1 = { x: 140, y: 200, width: 80, height: 80 };
+	const pump2 = { x: 140, y: 500, width: 80, height: 80 };
+
+	const valveWidth = 50;
+	const valveHeight = 50;
 
 	const gateIcon = {
 		arrowOffset: 18,
@@ -57,9 +61,9 @@
 	const z2 = { x: 450, y: 500 };
 
 	// Vertical collector line
-	const collector = { x: 600 };
+	const collector = { x: 610 };
 
-	const manifold = { x: 520, y: 30, width: 190, height: 620 };
+	const manifold = { x: 530, y: 30, width: 190, height: 620 };
 
 	const output = {
 		x: 820,
@@ -124,11 +128,14 @@
 
 	const z1Layout = getGateTopLayout(z1);
 	const z2Layout = getGateTopLayout(z2);
+	$: if (hasResults) {
+		z1Layout.block.height += 20;
+		z2Layout.block.height += 20;
+	}
 
 	const z3Center = { x: collector.x, y: z3.y + valveHeight / 2 };
 	const z4Center = { x: collector.x, y: z4.y + valveHeight / 2 };
 	const z5Center = { x: collector.x, y: z5.y + valveHeight / 2 };
-
 	const z3Layout = getGateSideLayout(z3Center);
 	const z4Layout = getGateSideLayout(z4Center);
 	const z5Layout = getGateSideLayout(z5Center);
@@ -183,7 +190,7 @@
 			x2={k1.x - valveWidth / 2}
 			y2={pump1.y}
 			class="flow-indicator"
-			class:active={isPump1Active}
+			class:turnedOn={isPump1Active}
 		/>
 
 		<!-- PIPE FROM PUMP 2 -->
@@ -201,7 +208,7 @@
 			x2={k2.x - valveWidth / 2}
 			y2={pump2.y}
 			class="flow-indicator"
-			class:active={isPump2Active}
+			class:turnedOn={isPump2Active}
 		/>
 
 		<!-- PUMP 1 -->
@@ -262,6 +269,7 @@
 				{/if}
 			</text>
 		</g>
+
 		<!-- PIPE AFTER K1 -->
 		<line
 			x1={k1.x + valveWidth / 2}
@@ -277,7 +285,7 @@
 			x2={z1.x - valveWidth / 2}
 			y2={z1.y}
 			class="flow-indicator"
-			class:active={isPump1Active}
+			class:turnedOn={isPump1Active}
 		/>
 
 		<!-- PIPE AFTER K2 -->
@@ -295,7 +303,7 @@
 			x2={z2.x - valveWidth / 2}
 			y2={z2.y}
 			class="flow-indicator"
-			class:active={isPump2Active}
+			class:turnedOn={isPump2Active}
 		/>
 
 		<!-- CHECK VALVE K1 -->
@@ -387,7 +395,7 @@
 			x2={collector.x}
 			y2={z5.y + valveHeight / 2}
 			class="flow-indicator"
-			class:active={isManifoldActive}
+			class:turnedOn={isManifoldActive && (gateValveStates.z1 || gateValveStates.z2)}
 		/>
 
 		<!-- PIPE TO COLLECTOR FROM LINE 1 -->
@@ -405,7 +413,7 @@
 			x2={collector.x}
 			y2={z1.y}
 			class="flow-indicator"
-			class:active={isPump1Active}
+			class:turnedOn={gateValveStates.z1}
 		/>
 
 		<!-- PIPE TO COLLECTOR FROM LINE 2 -->
@@ -423,7 +431,7 @@
 			x2={collector.x}
 			y2={z2.y}
 			class="flow-indicator"
-			class:active={isPump2Active}
+			class:turnedOn={gateValveStates.z2}
 		/>
 
 		<!-- GATE VALVE Z1 -->
@@ -445,11 +453,15 @@
 				class="valve-body"
 			/>
 			<polygon
-				points={`${z1.x - gateIcon.arrowOffset},${z1.y - gateIcon.arrowHeight + gateIcon.offsetY} ${z1.x - gateIcon.arrowOffset},${z1.y + gateIcon.arrowHeight + gateIcon.offsetY} ${z1.x},${z1.y + gateIcon.offsetY}`}
+				points={`${z1.x - gateIcon.arrowOffset},${z1.y - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z1.x - gateIcon.arrowOffset},${z1.y + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z1.x},${z1.y + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<polygon
-				points={`${z1.x + gateIcon.arrowOffset},${z1.y - gateIcon.arrowHeight + gateIcon.offsetY} ${z1.x + gateIcon.arrowOffset},${z1.y + gateIcon.arrowHeight + gateIcon.offsetY} ${z1.x},${z1.y + gateIcon.offsetY}`}
+				points={`${z1.x + gateIcon.arrowOffset},${z1.y - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z1.x + gateIcon.arrowOffset},${z1.y + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z1.x},${z1.y + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<line
@@ -486,7 +498,7 @@
 					label="З1"
 					checked={gateValveStates.z1}
 					disabled={!hasResults}
-					onChange={(detail) => setGateValveState('z1', detail.checked)}
+					on:change={() => toggleGateValve('z1')}
 				/>
 			</div>
 		</foreignObject>
@@ -510,11 +522,15 @@
 				class="valve-body"
 			/>
 			<polygon
-				points={`${z2.x - gateIcon.arrowOffset},${z2.y - gateIcon.arrowHeight + gateIcon.offsetY} ${z2.x - gateIcon.arrowOffset},${z2.y + gateIcon.arrowHeight + gateIcon.offsetY} ${z2.x},${z2.y + gateIcon.offsetY}`}
+				points={`${z2.x - gateIcon.arrowOffset},${z2.y - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z2.x - gateIcon.arrowOffset},${z2.y + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z2.x},${z2.y + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<polygon
-				points={`${z2.x + gateIcon.arrowOffset},${z2.y - gateIcon.arrowHeight + gateIcon.offsetY} ${z2.x + gateIcon.arrowOffset},${z2.y + gateIcon.arrowHeight + gateIcon.offsetY} ${z2.x},${z2.y + gateIcon.offsetY}`}
+				points={`${z2.x + gateIcon.arrowOffset},${z2.y - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z2.x + gateIcon.arrowOffset},${z2.y + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${z2.x},${z2.y + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<line
@@ -551,7 +567,7 @@
 					label="З2"
 					checked={gateValveStates.z2}
 					disabled={!hasResults}
-					onChange={(detail) => setGateValveState('z2', detail.checked)}
+					on:change={() => toggleGateValve('z2')}
 				/>
 			</div>
 		</foreignObject>
@@ -572,7 +588,7 @@
 			x2={output.x - output.pipeOffset}
 			y2={z3.y + valveHeight / 2}
 			class="flow-indicator"
-			class:active={isManifoldActive}
+			class:turnedOn={gateValveStates.z3 && (gateValveStates.z1 || gateValveStates.z2)}
 		/>
 		<polygon
 			points={getOutputArrowPoints(z3.y + valveHeight / 2)}
@@ -586,6 +602,7 @@
 			class="output-label"
 			class:active={isManifoldActive}>Выход</text
 		>
+
 		<!-- OUTPUT PIPE FROM Z5 -->
 		<line
 			x1={collector.x}
@@ -601,7 +618,7 @@
 			x2={output.x - output.pipeOffset}
 			y2={z5.y + valveHeight / 2}
 			class="flow-indicator"
-			class:active={isManifoldActive}
+			class:turnedOn={gateValveStates.z5 && (gateValveStates.z1 || gateValveStates.z2)}
 		/>
 		<polygon
 			points={getOutputArrowPoints(z5.y + valveHeight / 2)}
@@ -635,11 +652,15 @@
 				class="valve-body"
 			/>
 			<polygon
-				points={`${collector.x - gateIcon.arrowOffset},${z3.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x - gateIcon.arrowOffset},${z3.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z3.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x - gateIcon.arrowOffset},${z3.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x - gateIcon.arrowOffset},${z3.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z3.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<polygon
-				points={`${collector.x + gateIcon.arrowOffset},${z3.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x + gateIcon.arrowOffset},${z3.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z3.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x + gateIcon.arrowOffset},${z3.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x + gateIcon.arrowOffset},${z3.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z3.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<line
@@ -708,11 +729,15 @@
 				class="valve-body"
 			/>
 			<polygon
-				points={`${collector.x - gateIcon.arrowOffset},${z4.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x - gateIcon.arrowOffset},${z4.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z4.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x - gateIcon.arrowOffset},${z4.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x - gateIcon.arrowOffset},${z4.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z4.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<polygon
-				points={`${collector.x + gateIcon.arrowOffset},${z4.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x + gateIcon.arrowOffset},${z4.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z4.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x + gateIcon.arrowOffset},${z4.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x + gateIcon.arrowOffset},${z4.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z4.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<line
@@ -781,11 +806,15 @@
 				class="valve-body"
 			/>
 			<polygon
-				points={`${collector.x - gateIcon.arrowOffset},${z5.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x - gateIcon.arrowOffset},${z5.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z5.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x - gateIcon.arrowOffset},${z5.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x - gateIcon.arrowOffset},${z5.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z5.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<polygon
-				points={`${collector.x + gateIcon.arrowOffset},${z5.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x + gateIcon.arrowOffset},${z5.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} ${collector.x},${z5.y + valveHeight / 2 + gateIcon.offsetY}`}
+				points={`${collector.x + gateIcon.arrowOffset},${z5.y + valveHeight / 2 - gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x + gateIcon.arrowOffset},${z5.y + valveHeight / 2 + gateIcon.arrowHeight + gateIcon.offsetY} 
+					${collector.x},${z5.y + valveHeight / 2 + gateIcon.offsetY}`}
 				class="valve-icon valve-icon--filled"
 			/>
 			<line
@@ -873,11 +902,15 @@
 		background-color: var(--color-bg);
 	}
 
-	/* h3 {
+	h3 {
 		margin: 0 0 0.5rem 0;
 		color: var(--color-gray-dark);
 		font-size: 1.3rem;
-	} */
+		font-family:
+			system-ui,
+			-apple-system,
+			sans-serif;
+	}
 
 	.instruction-text {
 		margin: 0 0 1rem 0;
@@ -999,9 +1032,9 @@
 	}
 
 	.gate-block {
-		fill: rgba(255, 255, 255, 0.85);
+		fill: var(--color-bg);
 		stroke: var(--color-border);
-		stroke-width: 1.5;
+		stroke-width: 2;
 	}
 
 	.gate-toggle-wrapper {
@@ -1050,7 +1083,7 @@
 		pointer-events: none;
 	}
 
-	.flow-indicator.active {
+	.flow-indicator.turnedOn {
 		opacity: 1;
 		animation: pipe-flow var(--flow-speed) linear infinite;
 	}
