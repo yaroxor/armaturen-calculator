@@ -18,6 +18,7 @@
 
 	// Results state
 	let results: CalculatorResults | null = null;
+	let highlightedElement: string | null = null;
 
 	async function handleSubmit() {
 		const inputs: CalculatorInputs = {
@@ -56,6 +57,20 @@
 		pump2Velocity = 0;
 		manifoldVelocity = 0;
 		results = null;
+		highlightedElement = null;
+	}
+
+	function handleElementClick(elementId: string) {
+		highlightedElement = elementId;
+
+		const el = document.getElementById(elementId);
+		if (el) {
+			el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+
+		setTimeout(() => {
+			highlightedElement = null;
+		}, 2000);
 	}
 </script>
 
@@ -108,13 +123,29 @@
 				<section class="results" aria-live="polite">
 					<h2 id="results-start">Обратные клапаны</h2>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="check_valve_k1"
+						class:highlighted={highlightedElement === 'check_valve_k1'}
+						on:click={() => handleElementClick('check_valve_k1')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('check_valve_k1')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG AW К1</h3>
 						<p>Диаметр: {Math.ceil(results.check_valve_k1.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k1.pressure_m)} м</p>
 					</div>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="check_valve_k2"
+						class:highlighted={highlightedElement === 'check_valve_k2'}
+						on:click={() => handleElementClick('check_valve_k2')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('check_valve_k2')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG AW К2</h3>
 						<p>Диаметр: {Math.ceil(results.check_valve_k2.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k2.pressure_m)} м</p>
@@ -122,31 +153,71 @@
 
 					<h2>Шиберные ножевые задвижки</h2>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="gate_valve_z1"
+						class:highlighted={highlightedElement === 'gate_valve_z1'}
+						on:click={() => handleElementClick('gate_valve_z1')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('gate_valve_z1')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG ZETA З1</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z1.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z1.pressure_m)} м</p>
 					</div>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="gate_valve_z2"
+						class:highlighted={highlightedElement === 'gate_valve_z2'}
+						on:click={() => handleElementClick('gate_valve_z2')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('gate_valve_z2')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG ZETA З2</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z2.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z2.pressure_m)} м</p>
 					</div>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="gate_valve_z3"
+						class:highlighted={highlightedElement === 'gate_valve_z3'}
+						on:click={() => handleElementClick('gate_valve_z3')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('gate_valve_z3')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG ZETA З3</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z3.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z3.pressure_m)} м</p>
 					</div>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="gate_valve_z4"
+						class:highlighted={highlightedElement === 'gate_valve_z4'}
+						on:click={() => handleElementClick('gate_valve_z4')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('gate_valve_z4')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG ZETA З4</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z4.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z4.pressure_m)} м</p>
 					</div>
 
-					<div class="results-block">
+					<div
+						class="results-block"
+						id="gate_valve_z5"
+						class:highlighted={highlightedElement === 'gate_valve_z5'}
+						on:click={() => handleElementClick('gate_valve_z5')}
+						on:keypress={(e) => e.key === 'Enter' && handleElementClick('gate_valve_z5')}
+						role="button"
+						tabindex="0"
+					>
 						<h3>VAG ZETA З5</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z5.diameter_mm)} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z5.pressure_m)} м</p>
@@ -175,7 +246,7 @@
 
 	<div class="diagram-column">
 		<div class="diagram-sticky">
-			<Schema01Diagram {results} />
+			<Schema01Diagram {results} {highlightedElement} onElementClick={handleElementClick} />
 		</div>
 	</div>
 </div>
@@ -336,6 +407,33 @@
 		border-radius: 4px;
 		padding: 1rem;
 		margin-bottom: 0.75rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.results-block:hover {
+		background-color: #e8f4ff;
+		border-color: #4a90e2;
+		transform: translateX(4px);
+		border: none;
+	}
+
+	.results-block.highlighted {
+		background-color: #d4e9ff;
+		border-color: #2563eb;
+		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+		animation: pulse 0.5s ease-in-out;
+		border: none;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.02);
+		}
 	}
 
 	.results-block p {

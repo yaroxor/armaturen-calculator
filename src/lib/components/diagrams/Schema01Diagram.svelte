@@ -3,6 +3,8 @@
 	import type { CalculatorResults } from '$lib/calculators/types';
 
 	export let results: CalculatorResults | null = null;
+	export let highlightedElement: string | null = null;
+	export let onElementClick: (elementId: string) => void;
 
 	$: hasResults = results !== null;
 
@@ -170,11 +172,6 @@
 		<!-- Background -->
 		<rect width="1000" height="700" fill="#f8f9fa" />
 
-		<!-- Title -->
-		<!-- <text x="500" y="30" text-anchor="middle" class="title">
-			Двухнасосная система с гребенкой
-		</text> -->
-
 		<!-- PIPE FROM PUMP 1 -->
 		<line
 			x1={pump1.x + pump1.width / 2}
@@ -307,7 +304,15 @@
 		/>
 
 		<!-- CHECK VALVE K1 -->
-		<g class="valve check-valve" class:active={isPump1Active}>
+		<g
+			class="valve check-valve clickable"
+			class:active={isPump1Active}
+			class:highlighted={highlightedElement === 'check_valve_k1'}
+			on:click={() => onElementClick('check_valve_k1')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('check_valve_k1')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={k1.x - valveWidth / 2}
 				y={k1.y - valveHeight / 2}
@@ -334,7 +339,15 @@
 			{/if}
 		</g>
 		<!-- CHECK VALVE K2 -->
-		<g class="valve check-valve" class:active={isPump2Active}>
+		<g
+			class="valve check-valve clickable"
+			class:active={isPump2Active}
+			class:highlighted={highlightedElement === 'check_valve_k2'}
+			on:click={() => onElementClick('check_valve_k2')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('check_valve_k2')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={k2.x - valveWidth / 2}
 				y={k2.y - valveHeight / 2}
@@ -443,7 +456,15 @@
 			height={z1Layout.block.height}
 			rx="12"
 		/>
-		<g class="valve gate-valve" class:active={isPump1Active}>
+		<g
+			class="valve gate-valve clickable"
+			class:active={isPump1Active}
+			class:highlighted={highlightedElement === 'gate_valve_z1'}
+			on:click={() => onElementClick('gate_valve_z1')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('gate_valve_z1')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={z1.x - valveWidth / 2}
 				y={z1.y - valveHeight / 2}
@@ -512,7 +533,15 @@
 			height={z2Layout.block.height}
 			rx="12"
 		/>
-		<g class="valve gate-valve" class:active={isPump2Active}>
+		<g
+			class="valve gate-valve clickable"
+			class:active={isPump2Active}
+			class:highlighted={highlightedElement === 'gate_valve_z2'}
+			on:click={() => onElementClick('gate_valve_z2')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('gate_valve_z2')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={z2.x - valveWidth / 2}
 				y={z2.y - valveHeight / 2}
@@ -642,7 +671,15 @@
 			height={z3Layout.block.height}
 			rx="12"
 		/>
-		<g class="valve gate-valve" class:active={isManifoldActive}>
+		<g
+			class="valve gate-valve clickable"
+			class:active={isManifoldActive}
+			class:highlighted={highlightedElement === 'gate_valve_z3'}
+			on:click={() => onElementClick('gate_valve_z3')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('gate_valve_z3')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={collector.x - valveWidth / 2}
 				y={z3.y}
@@ -719,7 +756,15 @@
 			height={z4Layout.block.height}
 			rx="12"
 		/>
-		<g class="valve gate-valve" class:active={isManifoldActive}>
+		<g
+			class="valve gate-valve clickable"
+			class:active={isManifoldActive}
+			class:highlighted={highlightedElement === 'gate_valve_z4'}
+			on:click={() => onElementClick('gate_valve_z4')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('gate_valve_z4')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={collector.x - valveWidth / 2}
 				y={z4.y}
@@ -796,7 +841,15 @@
 			height={z5Layout.block.height}
 			rx="12"
 		/>
-		<g class="valve gate-valve" class:active={isManifoldActive}>
+		<g
+			class="valve gate-valve clickable"
+			class:active={isManifoldActive}
+			class:highlighted={highlightedElement === 'gate_valve_z5'}
+			on:click={() => onElementClick('gate_valve_z5')}
+			on:keypress={(e) => e.key === 'Enter' && onElementClick('gate_valve_z5')}
+			role="button"
+			tabindex="0"
+		>
 			<rect
 				x={collector.x - valveWidth / 2}
 				y={z5.y}
@@ -1095,6 +1148,58 @@
 
 	.flow-arrow.active {
 		fill: var(--color-flow);
+	}
+
+	/* make the group interactive */
+	.valve.clickable {
+		cursor: pointer;
+		pointer-events: all; /* ensure clicks reach the <g> */
+		outline: none;
+		transform-box: fill-box; /* allow correct transform origin */
+		transform-origin: center;
+		transition:
+			transform 0.18s ease,
+			filter 0.18s ease,
+			stroke 0.18s ease,
+			fill 0.18s ease;
+	}
+
+	/* hover and keyboard focus (keyboard: tabbable because you have tabindex="0") */
+	.valve.clickable:hover .valve-body,
+	.valve.clickable:focus-visible .valve-body {
+		fill: var(--color-component); /* change fill on hover */
+		stroke: var(--color-flow); /* change stroke color */
+		stroke-width: 3;
+	}
+
+	/* subtle move/scale on hover (works on the whole group) */
+	.valve.clickable:hover {
+		transform: translateX(2px) scale(1.01);
+	}
+
+	/* pressed with mouse (momentary) */
+	.valve.clickable:active {
+		transform: translateX(1px) scale(0.995);
+	}
+
+	/* persistent "active" state provided by Svelte class:active={...} */
+	.valve.active .valve-body {
+		fill: var(--color-component);
+		stroke: var(--color-accent-dark);
+	}
+	/* .valve.active .valve-icon {
+		fill: var(--color-flow);
+		stroke: var(--color-accent-dark);
+	}
+	.valve.active .gate-valve-stem {
+		stroke: var(--color-accent-dark);
+	} */
+
+	/* highlighted state (your class:highlighted binding) */
+	.valve.highlighted .valve-body {
+		filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.25));
+		stroke-width: 3;
+		stroke: var(--color-flow);
 	}
 
 	@media (max-width: 768px) {
