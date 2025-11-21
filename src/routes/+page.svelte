@@ -134,7 +134,7 @@
 					>
 						<h3>VAG AW К1</h3>
 						<p>Диаметр: {Math.ceil(results.check_valve_k1.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.check_valve_k1.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.check_valve_k1.pressure_m)} атм</p>
 					</div>
 
 					<div
@@ -148,7 +148,7 @@
 					>
 						<h3>VAG AW К2</h3>
 						<p>Диаметр: {Math.ceil(results.check_valve_k2.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.check_valve_k2.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.check_valve_k2.pressure_m)} атм</p>
 					</div>
 
 					<h2>Шиберные ножевые задвижки</h2>
@@ -164,7 +164,7 @@
 					>
 						<h3>VAG ZETA З1</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z1.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.gate_valve_z1.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.gate_valve_z1.pressure_m)} атм</p>
 					</div>
 
 					<div
@@ -178,7 +178,7 @@
 					>
 						<h3>VAG ZETA З2</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z2.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.gate_valve_z2.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.gate_valve_z2.pressure_m)} атм</p>
 					</div>
 
 					<div
@@ -192,7 +192,7 @@
 					>
 						<h3>VAG ZETA З3</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z3.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.gate_valve_z3.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.gate_valve_z3.pressure_m)} атм</p>
 					</div>
 
 					<div
@@ -206,7 +206,7 @@
 					>
 						<h3>VAG ZETA З4</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z4.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.gate_valve_z4.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.gate_valve_z4.pressure_m)} атм</p>
 					</div>
 
 					<div
@@ -220,7 +220,7 @@
 					>
 						<h3>VAG ZETA З5</h3>
 						<p>Диаметр: {Math.ceil(results.gate_valve_z5.diameter_mm)} мм</p>
-						<p>Давление: {Math.ceil(results.gate_valve_z5.pressure_m)} м</p>
+						<p>Давление: {Math.ceil(results.gate_valve_z5.pressure_m)} атм</p>
 					</div>
 
 					<h2>Минимальное расстояние</h2>
