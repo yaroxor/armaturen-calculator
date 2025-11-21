@@ -134,7 +134,7 @@
 						tabindex="0"
 					>
 						<h3>VAG AW</h3>
-						<h4>обозначение на на схеме К1</h4>
+						<h4>обозначение на на схеме — К1</h4>
 						<p>Диаметр: {results.check_valve_k1.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k1.pressure_m)} атм</p>
 					</div>
@@ -149,7 +149,7 @@
 						tabindex="0"
 					>
 						<h3 class="name-w-caption">VAG AW</h3>
-						<h4>обозначение на на схеме К2</h4>
+						<h4>обозначение на на схеме — К2</h4>
 						<p>Диаметр: {results.check_valve_k2.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k2.pressure_m)} атм</p>
 					</div>
@@ -167,7 +167,7 @@
 						tabindex="0"
 					>
 						<h3>VAG ZETA</h3>
-						<h4>обозначение на на схеме З1</h4>
+						<h4>обозначение на на схеме — З1</h4>
 						<p>Диаметр: {results.gate_valve_z1.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z1.pressure_m)} атм</p>
 					</div>
@@ -182,7 +182,7 @@
 						tabindex="0"
 					>
 						<h3>VAG ZETA</h3>
-						<h4>обозначение на на схеме З2</h4>
+						<h4>обозначение на на схеме — З2</h4>
 						<p>Диаметр: {results.gate_valve_z2.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z2.pressure_m)} атм</p>
 					</div>
@@ -197,7 +197,7 @@
 						tabindex="0"
 					>
 						<h3>VAG ZETA</h3>
-						<h4>обозначение на на схеме З3</h4>
+						<h4>обозначение на на схеме — З3</h4>
 						<p>Диаметр: {results.gate_valve_z3.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z3.pressure_m)} атм</p>
 					</div>
@@ -212,7 +212,7 @@
 						tabindex="0"
 					>
 						<h3>VAG ZETA</h3>
-						<h4>обозначение на на схеме З4</h4>
+						<h4>обозначение на на схеме — З4</h4>
 						<p>Диаметр: {results.gate_valve_z4.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z4.pressure_m)} атм</p>
 					</div>
@@ -227,7 +227,7 @@
 						tabindex="0"
 					>
 						<h3>VAG ZETA</h3>
-						<h4>обозначение на на схеме З5</h4>
+						<h4>обозначение на на схеме — З5</h4>
 						<p>Диаметр: {results.gate_valve_z5.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z5.pressure_m)} атм</p>
 					</div>
@@ -347,7 +347,7 @@
 	/* Explanatory note style for h4 */
 	h4 {
 		font-style: italic;
-		font-weight: 300;
+		font-weight: 400;
 		font-size: 1rem;
 		line-height: 1.35;
 		color: #555;
