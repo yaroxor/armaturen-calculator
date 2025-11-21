@@ -121,7 +121,7 @@
 
 			{#if results}
 				<section class="results" aria-live="polite">
-					<h2 id="results-start">Обратные клапаны</h2>
+					<h2 id="results-start" class="title-w-caption">Обратные клапаны</h2>
 					<h3>минимальный размер</h3>
 
 					<div
@@ -133,7 +133,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG AW К1</h3>
+						<h3>VAG AW</h3>
+						<h4>обозначение на на схеме К1</h4>
 						<p>Диаметр: {results.check_valve_k1.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k1.pressure_m)} атм</p>
 					</div>
@@ -147,7 +148,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG AW К2</h3>
+						<h3 class="name-w-caption">VAG AW</h3>
+						<h4>обозначение на на схеме К2</h4>
 						<p>Диаметр: {results.check_valve_k2.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.check_valve_k2.pressure_m)} атм</p>
 					</div>
@@ -164,7 +166,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG ZETA З1</h3>
+						<h3>VAG ZETA</h3>
+						<h4>обозначение на на схеме З1</h4>
 						<p>Диаметр: {results.gate_valve_z1.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z1.pressure_m)} атм</p>
 					</div>
@@ -178,7 +181,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG ZETA З2</h3>
+						<h3>VAG ZETA</h3>
+						<h4>обозначение на на схеме З2</h4>
 						<p>Диаметр: {results.gate_valve_z2.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z2.pressure_m)} атм</p>
 					</div>
@@ -192,7 +196,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG ZETA З3</h3>
+						<h3>VAG ZETA</h3>
+						<h4>обозначение на на схеме З3</h4>
 						<p>Диаметр: {results.gate_valve_z3.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z3.pressure_m)} атм</p>
 					</div>
@@ -206,7 +211,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG ZETA З4</h3>
+						<h3>VAG ZETA</h3>
+						<h4>обозначение на на схеме З4</h4>
 						<p>Диаметр: {results.gate_valve_z4.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z4.pressure_m)} атм</p>
 					</div>
@@ -220,7 +226,8 @@
 						role="button"
 						tabindex="0"
 					>
-						<h3>VAG ZETA З5</h3>
+						<h3>VAG ZETA</h3>
+						<h4>обозначение на на схеме З5</h4>
 						<p>Диаметр: {results.gate_valve_z5.diameter_mm} мм</p>
 						<p>Давление: {Math.ceil(results.gate_valve_z5.pressure_m)} атм</p>
 					</div>
@@ -254,30 +261,40 @@
 </div>
 
 <style>
+	:root {
+		--space-xxs: 0.25rem;
+		--space-xs: 0.5rem;
+		--space-sm: 0.75rem;
+		--space-md: 1rem;
+		--space-lg: 1.5rem;
+
+		/* tuning knobs:
+       - Increase --space-lg to add more room between caption (h3) and blocks
+       - Increase --space-sm or --gap-block to increase gap between h4 and p
+    */
+		--gap-block: var(--space-sm);
+	}
+
 	/* Main layout: split screen */
 	.page-layout {
 		display: flex;
 		min-height: 100vh;
 	}
 
-	/* Left column: scrollable calculator (1/3 width) */
 	.calculator-column {
 		flex: 0 0 33.333%;
 		overflow-y: auto;
 		max-height: 100vh;
 	}
 
-	/* Right column: fixed diagram (2/3 width) */
 	.diagram-column {
 		flex: 0 0 66.667%;
-		/* background: #f8f9fa; */
 		border-left: 2px solid #ddd;
 		overflow: hidden;
 	}
 
 	/* Sticky container for diagram */
 	.diagram-sticky {
-		/* position: sticky; */
 		top: 0;
 		height: 100vh;
 		display: flex;
@@ -286,7 +303,6 @@
 		padding: 1rem;
 	}
 
-	/* Calculator container */
 	.container {
 		width: 90%;
 		max-width: none;
@@ -294,6 +310,10 @@
 		font-family:
 			system-ui,
 			-apple-system,
+			'Segoe UI',
+			Roboto,
+			'Helvetica Neue',
+			Arial,
 			sans-serif;
 	}
 
@@ -306,16 +326,115 @@
 	h2 {
 		color: #555;
 		margin-top: 1.5rem;
-		margin-bottom: 0.75rem;
+		margin-bottom: var(--space-sm);
 		font-size: 1.2rem;
+	}
+
+	h2.title-w-caption {
+		margin-bottom: 0.5rem;
 	}
 
 	h3 {
 		color: #666;
-		margin-bottom: 0.5rem;
 		font-size: 1rem;
+		margin: 0 0 var(--space-sm) 0;
 	}
 
+	h3.name-w-caption {
+		margin-bottom: var(--space-xs);
+	}
+
+	/* Explanatory note style for h4 */
+	h4 {
+		font-style: italic;
+		font-weight: 300;
+		font-size: 1rem;
+		line-height: 1.35;
+		color: #555;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			Roboto,
+			'Helvetica Neue',
+			Arial,
+			serif;
+		font-synthesis: none;
+		-webkit-font-smoothing: antialiased;
+		margin: 0; /* spacing inside block controlled by gap */
+	}
+
+	.results {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 2px solid #ddd;
+	}
+
+	.results > h3 {
+		margin-bottom: var(--space-lg);
+	}
+
+	/* Single consolidated results-block definition:
+     - uses flex + gap to control spacing between h3/h4/p
+     - overflow:auto creates a BFC and avoids margin collapse
+  */
+	.results-block {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap-block); /* controls spacing between h3 / h4 / p */
+		overflow: auto; /* prevents margin-collapsing issues */
+		background-color: #f9f9f9;
+		border: 1px solid #e0e0e0;
+		border-radius: 4px;
+		padding: 1rem;
+		margin-bottom: 0.75rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	/* Reset margins inside blocks so gap is authoritative */
+	.results-block h3,
+	.results-block h4,
+	.results-block p {
+		margin: 0;
+	}
+
+	/* If you want an explicit extra gap between the h4 caption and the values,
+     increase --gap-block or add a specific rule below. Prefer adjusting --gap-block. */
+	/* .results-block h4 { margin-bottom: 0.75rem; }  <-- optional override */
+
+	.results-block p {
+		margin: 0.4rem 0; /* fine-grain spacing for lines within paragraphs */
+		color: #555;
+		font-size: 0.9rem;
+	}
+
+	.results-block:hover {
+		background-color: #e8f4ff;
+		border-color: #4a90e2;
+		transform: translateX(4px);
+		border: none;
+	}
+
+	.results-block.highlighted {
+		background-color: #d4e9ff;
+		border-color: #2563eb;
+		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+		animation: pulse 0.5s ease-in-out;
+		border: none;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.02);
+		}
+	}
+
+	/* Form and controls */
 	fieldset {
 		border: 1px solid #ddd;
 		border-radius: 4px;
@@ -395,53 +514,6 @@
 
 	button[type='reset']:hover {
 		background-color: #d0d0d0;
-	}
-
-	.results {
-		margin-top: 1.5rem;
-		padding-top: 1.5rem;
-		border-top: 2px solid #ddd;
-	}
-
-	.results-block {
-		background-color: #f9f9f9;
-		border: 1px solid #e0e0e0;
-		border-radius: 4px;
-		padding: 1rem;
-		margin-bottom: 0.75rem;
-		cursor: pointer;
-		transition: all 0.3s ease;
-	}
-
-	.results-block:hover {
-		background-color: #e8f4ff;
-		border-color: #4a90e2;
-		transform: translateX(4px);
-		border: none;
-	}
-
-	.results-block.highlighted {
-		background-color: #d4e9ff;
-		border-color: #2563eb;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-		animation: pulse 0.5s ease-in-out;
-		border: none;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			transform: scale(1);
-		}
-		50% {
-			transform: scale(1.02);
-		}
-	}
-
-	.results-block p {
-		margin: 0.4rem 0;
-		color: #555;
-		font-size: 0.9rem;
 	}
 
 	/* Responsive: Stack on tablets/mobile */
