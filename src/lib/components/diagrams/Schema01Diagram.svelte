@@ -46,33 +46,25 @@
 		setGateValveState(id, !gateValveStates[id]);
 	};
 
-	const pump1 = { x: 140, y: 200, width: 80, height: 80 };
-	const pump2 = { x: 140, y: 500, width: 80, height: 80 };
+	const pump1 = { x: 70, y: 200, width: 80, height: 80 };
+	const pump2 = { x: 70, y: 500, width: 80, height: 80 };
 
 	const valveWidth = 50;
 	const valveHeight = 50;
 
-	const gateIcon = {
-		arrowOffset: 18,
-		arrowHeight: 10,
-		stemHeight: 18,
-		stemWidth: 20,
-		offsetY: 3
-	};
-
 	const k1 = { x: 310, y: 200 };
 	const k2 = { x: 310, y: 500 };
 
-	const z1 = { x: 450, y: 200 };
-	const z2 = { x: 450, y: 500 };
+	const z1 = { x: 500, y: 200 };
+	const z2 = { x: 500, y: 500 };
 
 	// Vertical collector line
-	const collector = { x: 610 };
+	const collector = { x: 710 };
 
-	const manifold = { x: 530, y: 30, width: 190, height: 620 };
+	const manifold = { x: 620, y: 0, width: 210, height: 675 };
 
 	const output = {
-		x: 820,
+		x: 950,
 		pipeOffset: 40,
 		arrow: {
 			lead: 10,
@@ -82,9 +74,17 @@
 		labelOffsetY: 5
 	};
 
-	const z3 = { y: 100 };
+	const z3 = { y: 50 };
 	const z4 = { y: 330 };
-	const z5 = { y: 550 };
+	const z5 = { y: 600 };
+
+	const gateIcon = {
+		arrowOffset: 18,
+		arrowHeight: 10,
+		stemHeight: 18,
+		stemWidth: 20,
+		offsetY: 3
+	};
 
 	const topToggleBlockConfig = {
 		width: 90,
@@ -167,6 +167,13 @@
 		const tailX = tipX - output.arrow.length;
 
 		return `${tailX},${y - output.arrow.halfHeight} ${tipX},${y} ${tailX},${y + output.arrow.halfHeight}`;
+	};
+
+	const dimensionLine = {
+		offset: 30,
+		arrowSize: 12,
+		arrowWidth: 8,
+		labelOffsetY: 5
 	};
 </script>
 
@@ -429,6 +436,88 @@
 			</div>
 		</foreignObject>
 
+		<!-- H1 - K1 (L1) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line (shortened by arrowSize on each end) -->
+				<line
+					x1={pump1.x + pump1.width / 2 + dimensionLine.arrowSize}
+					y1={pump1.y + dimensionLine.offset}
+					x2={k1Layout.block.x - dimensionLine.arrowSize}
+					y2={pump1.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${pump1.x + 2 + pump1.width / 2},${pump1.y + dimensionLine.offset} 
+               ${pump1.x + pump1.width / 2 + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${pump1.x + pump1.width / 2 + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${k1Layout.block.x - 2},${pump1.y + dimensionLine.offset} 
+               ${k1Layout.block.x - dimensionLine.arrowSize},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${k1Layout.block.x - dimensionLine.arrowSize},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(pump1.x + pump1.width / 2 + k1.x - valveWidth / 2) / 2}
+					y={pump1.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L1<tspan class="line-info">: {results.length1} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- H2 - K2 (L1) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line (shortened by arrowSize on each end) -->
+				<line
+					x1={pump2.x + pump2.width / 2 + dimensionLine.arrowSize}
+					y1={pump2.y + dimensionLine.offset}
+					x2={k1Layout.block.x - dimensionLine.arrowSize}
+					y2={pump2.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${pump2.x + 2 + pump2.width / 2},${pump2.y + dimensionLine.offset} 
+               ${pump2.x + pump2.width / 2 + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${pump2.x + pump2.width / 2 + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${k2Layout.block.x - 2},${pump2.y + dimensionLine.offset} 
+               ${k2Layout.block.x - dimensionLine.arrowSize},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${k2Layout.block.x - dimensionLine.arrowSize},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(pump2.x + pump2.width / 2 + k2.x - valveWidth / 2) / 2}
+					y={pump2.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L1<tspan class="line-info">: {results.length1} м</tspan>
+				</text>
+			</g>
+		{/if}
+
 		<!-- MANIFOLD (ГРЕБЕНКА) -->
 		<g class="manifold" class:active={isManifoldActive}>
 			<rect
@@ -656,6 +745,274 @@
 				/>
 			</div>
 		</foreignObject>
+
+		<!-- K1 - Z1 (L2) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line -->
+				<line
+					x1={k1Layout.block.x + k1Layout.block.width + dimensionLine.arrowSize}
+					y1={pump1.y + dimensionLine.offset}
+					x2={z1Layout.block.x - dimensionLine.arrowSize}
+					y2={pump1.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${k1Layout.block.x + k1Layout.block.width + 2},${pump1.y + dimensionLine.offset} 
+               ${k1Layout.block.x + k1Layout.block.width + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${k1Layout.block.x + k1Layout.block.width + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${z1Layout.block.x - 2},${pump1.y + dimensionLine.offset} 
+               ${z1Layout.block.x - dimensionLine.arrowSize},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${z1Layout.block.x - dimensionLine.arrowSize},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(k1Layout.block.x + k1Layout.block.width + z1Layout.block.x) / 2}
+					y={pump1.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L2<tspan class="line-info">: {results.length2} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- K2 - Z2 (L2) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line -->
+				<line
+					x1={k2Layout.block.x + k2Layout.block.width + dimensionLine.arrowSize}
+					y1={pump2.y + dimensionLine.offset}
+					x2={z2Layout.block.x - dimensionLine.arrowSize}
+					y2={pump2.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${k2Layout.block.x + k2Layout.block.width + 2},${pump2.y + dimensionLine.offset} 
+               ${k2Layout.block.x + k2Layout.block.width + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${k2Layout.block.x + k2Layout.block.width + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${z2Layout.block.x - 2},${pump2.y + dimensionLine.offset} 
+               ${z2Layout.block.x - dimensionLine.arrowSize},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${z2Layout.block.x - dimensionLine.arrowSize},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(k2Layout.block.x + k2Layout.block.width + z2Layout.block.x) / 2}
+					y={pump2.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L2<tspan class="line-info">: {results.length2} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- Z1 - Collector (L2) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<rect
+					x={(z1Layout.block.x + z1Layout.block.width + collector.x) / 2 - 40}
+					y={pump1.y + dimensionLine.offset + dimensionLine.labelOffsetY - 10}
+					width="80"
+					height="30"
+					rx="4"
+					fill="var(--color-bg)"
+					pointer-events="none"
+				/>
+
+				<!-- Main dimension line -->
+				<line
+					x1={z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize}
+					y1={pump1.y + dimensionLine.offset}
+					x2={collector.x - dimensionLine.arrowSize}
+					y2={pump1.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${z1Layout.block.x + z1Layout.block.width + 2},${pump1.y + dimensionLine.offset} 
+               ${z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${collector.x - 2 - 4.5},${pump1.y + dimensionLine.offset} 
+               ${collector.x - dimensionLine.arrowSize - 4.5},${pump1.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${collector.x - dimensionLine.arrowSize - 4.5},${pump1.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(z1Layout.block.x + z1Layout.block.width + collector.x) / 2}
+					y={pump1.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L2<tspan class="line-info">: {results.length2} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- Z2 - Collector (L2) DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<rect
+					x={(z1Layout.block.x + z1Layout.block.width + collector.x) / 2 - 40}
+					y={pump2.y + dimensionLine.offset + dimensionLine.labelOffsetY - 10}
+					width="80"
+					height="30"
+					rx="4"
+					fill="var(--color-bg)"
+					pointer-events="none"
+				/>
+
+				<!-- Main dimension line -->
+				<line
+					x1={z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize}
+					y1={pump2.y + dimensionLine.offset}
+					x2={collector.x - dimensionLine.arrowSize}
+					y2={pump2.y + dimensionLine.offset}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Left arrow -->
+				<polygon
+					points={`${z1Layout.block.x + z1Layout.block.width + 2},${pump2.y + dimensionLine.offset} 
+               ${z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${z1Layout.block.x + z1Layout.block.width + dimensionLine.arrowSize},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Right arrow -->
+				<polygon
+					points={`${collector.x - 2 - 4.5},${pump2.y + dimensionLine.offset} 
+               ${collector.x - dimensionLine.arrowSize - 4.5},${pump2.y + dimensionLine.offset - dimensionLine.arrowWidth / 2} 
+               ${collector.x - dimensionLine.arrowSize - 4.5},${pump2.y + dimensionLine.offset + dimensionLine.arrowWidth / 2}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={(z1Layout.block.x + z1Layout.block.width + collector.x) / 2}
+					y={pump2.y + dimensionLine.offset + dimensionLine.labelOffsetY}
+					text-anchor="middle"
+					class="dimension-label"
+				>
+					L2<tspan class="line-info">: {results.length2} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- Z3 - Z4 (L3) VERTICAL DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line -->
+				<line
+					x1={collector.x + dimensionLine.offset}
+					y1={z3Layout.block.y + z3Layout.block.height + dimensionLine.arrowSize}
+					x2={collector.x + dimensionLine.offset}
+					y2={z4Layout.block.y - dimensionLine.arrowSize}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Top arrow -->
+				<polygon
+					points={`${collector.x + dimensionLine.offset},${z3Layout.block.y + z3Layout.block.height + 2} 
+               ${collector.x + dimensionLine.offset - dimensionLine.arrowWidth / 2},${z3Layout.block.y + z3Layout.block.height + dimensionLine.arrowSize} 
+               ${collector.x + dimensionLine.offset + dimensionLine.arrowWidth / 2},${z3Layout.block.y + z3Layout.block.height + dimensionLine.arrowSize}`}
+					fill="#666"
+				/>
+
+				<!-- Bottom arrow -->
+				<polygon
+					points={`${collector.x + dimensionLine.offset},${z4Layout.block.y - 2} 
+               ${collector.x + dimensionLine.offset - dimensionLine.arrowWidth / 2},${z4Layout.block.y - dimensionLine.arrowSize} 
+               ${collector.x + dimensionLine.offset + dimensionLine.arrowWidth / 2},${z4Layout.block.y - dimensionLine.arrowSize}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={collector.x + dimensionLine.offset + dimensionLine.labelOffsetY + 5}
+					y={(z3Center.y + z4Center.y) / 2}
+					text-anchor="start"
+					dominant-baseline="middle"
+					class="dimension-label"
+				>
+					L3<tspan class="line-info">: {results.length3} м</tspan>
+				</text>
+			</g>
+		{/if}
+
+		<!-- Z4 - Z5 (L3) VERTICAL DIMENSION LINE -->
+		{#if results}
+			<g class="dimension-line">
+				<!-- Main dimension line -->
+				<line
+					x1={collector.x + dimensionLine.offset}
+					y1={z4Layout.block.y + z4Layout.block.height + dimensionLine.arrowSize}
+					x2={collector.x + dimensionLine.offset}
+					y2={z5Layout.block.y - dimensionLine.arrowSize}
+					stroke="#666"
+					stroke-width="2.5"
+				/>
+
+				<!-- Top arrow -->
+				<polygon
+					points={`${collector.x + dimensionLine.offset},${z4Layout.block.y + z4Layout.block.height + 2} 
+               ${collector.x + dimensionLine.offset - dimensionLine.arrowWidth / 2},${z4Layout.block.y + z4Layout.block.height + dimensionLine.arrowSize} 
+               ${collector.x + dimensionLine.offset + dimensionLine.arrowWidth / 2},${z4Layout.block.y + z4Layout.block.height + dimensionLine.arrowSize}`}
+					fill="#666"
+				/>
+
+				<!-- Bottom arrow -->
+				<polygon
+					points={`${collector.x + dimensionLine.offset},${z5Layout.block.y - 2} 
+               ${collector.x + dimensionLine.offset - dimensionLine.arrowWidth / 2},${z5Layout.block.y - dimensionLine.arrowSize} 
+               ${collector.x + dimensionLine.offset + dimensionLine.arrowWidth / 2},${z5Layout.block.y - dimensionLine.arrowSize}`}
+					fill="#666"
+				/>
+
+				<!-- Label and value -->
+				<text
+					x={collector.x + dimensionLine.offset + dimensionLine.labelOffsetY + 5}
+					y={(z4Center.y + z5Center.y) / 2}
+					text-anchor="start"
+					dominant-baseline="middle"
+					class="dimension-label"
+				>
+					L3<tspan class="line-info">: {results.length3} м</tspan>
+				</text>
+			</g>
+		{/if}
 
 		<!-- OUTPUTS -->
 		<!-- OUTPUT PIPE FROM Z3 -->
@@ -1032,10 +1389,15 @@
 
 	.valve-label,
 	.pump-label,
-	.output-label {
+	.output-label,
+	.dimension-label {
 		font-size: 16px;
 		font-weight: 700;
 		fill: var(--color-gray-dark);
+	}
+
+	.dimension-label {
+		dominant-baseline: hanging;
 	}
 
 	.manifold-label {
@@ -1044,13 +1406,18 @@
 		fill: var(--color-gray-dark);
 	}
 
-	/* .component-info,
+	.component-info,
 	.valve-info,
-	.legend-text {
-		font-size: 12px;
+	.legend-text,
+	.line-info {
+		font-size: 16px;
 		fill: var(--color-gray-dark);
 		font-weight: 500;
-	} */
+	}
+
+	.line-info {
+		dominant-baseline: hanging;
+	}
 
 	.output-label.active {
 		font-size: 18px;
@@ -1245,19 +1612,16 @@
 		fill: var(--color-component);
 		stroke: var(--color-accent-dark);
 	}
-	/* .valve.active .valve-icon {
-		fill: var(--color-flow);
-		stroke: var(--color-accent-dark);
-	}
-	.valve.active .gate-valve-stem {
-		stroke: var(--color-accent-dark);
-	} */
 
 	/* highlighted state (your class:highlighted binding) */
 	.valve.highlighted .valve-body {
 		filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.25));
 		stroke-width: 3;
 		stroke: var(--color-flow);
+	}
+
+	.dimension-line {
+		pointer-events: none;
 	}
 
 	@media (max-width: 768px) {
