@@ -15,6 +15,8 @@
 	$: isManifoldActive = isPump1Active || isPump2Active;
 
 	let gateValveStates = {
+		k1: false,
+		k2: false,
 		z1: false,
 		z2: false,
 		z3: false,
@@ -25,6 +27,8 @@
 
 	$: if (!gateInitialized && anyPumpActive) {
 		gateValveStates = {
+			k1: isPump1Active,
+			k2: isPump2Active,
 			z1: isPump1Active,
 			z2: isPump2Active,
 			z3: anyPumpActive,
@@ -130,9 +134,13 @@
 
 	const z1Layout = getGateTopLayout(z1);
 	const z2Layout = getGateTopLayout(z2);
+	const k1Layout = getGateTopLayout(k1);
+	const k2Layout = getGateTopLayout(k2);
 	$: if (hasResults) {
 		z1Layout.block.height += 20;
 		z2Layout.block.height += 20;
+		k1Layout.block.height += 20;
+		k2Layout.block.height += 20;
 	}
 
 	const z3Center = { x: collector.x, y: z3.y + valveHeight / 2 };
@@ -282,7 +290,7 @@
 			x2={z1.x - valveWidth / 2}
 			y2={z1.y}
 			class="flow-indicator"
-			class:turnedOn={isPump1Active}
+			class:turnedOn={gateValveStates.k1}
 		/>
 
 		<!-- PIPE AFTER K2 -->
@@ -300,10 +308,18 @@
 			x2={z2.x - valveWidth / 2}
 			y2={z2.y}
 			class="flow-indicator"
-			class:turnedOn={isPump2Active}
+			class:turnedOn={gateValveStates.k2}
 		/>
 
 		<!-- CHECK VALVE K1 -->
+		<rect
+			class="gate-block"
+			x={k1Layout.block.x}
+			y={k1Layout.block.y}
+			width={k1Layout.block.width}
+			height={k1Layout.block.height}
+			rx="12"
+		/>
 		<g
 			class="valve check-valve clickable"
 			class:active={isPump1Active}
@@ -338,7 +354,31 @@
 				</text>
 			{/if}
 		</g>
+		<foreignObject
+			x={k1Layout.toggle.x}
+			y={k1Layout.toggle.y}
+			width={topToggleBlockConfig.width}
+			height={topToggleBlockConfig.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="К1"
+					checked={gateValveStates.k1}
+					disabled={!hasResults}
+					on:change={() => toggleGateValve('k1')}
+				/>
+			</div>
+		</foreignObject>
+
 		<!-- CHECK VALVE K2 -->
+		<rect
+			class="gate-block"
+			x={k2Layout.block.x}
+			y={k2Layout.block.y}
+			width={k2Layout.block.width}
+			height={k2Layout.block.height}
+			rx="12"
+		/>
 		<g
 			class="valve check-valve clickable"
 			class:active={isPump2Active}
@@ -373,6 +413,21 @@
 				</text>
 			{/if}
 		</g>
+		<foreignObject
+			x={k2Layout.toggle.x}
+			y={k2Layout.toggle.y}
+			width={topToggleBlockConfig.width}
+			height={topToggleBlockConfig.height}
+		>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="gate-toggle-wrapper">
+				<ToggleSwitch
+					label="К1"
+					checked={gateValveStates.k2}
+					disabled={!hasResults}
+					on:change={() => toggleGateValve('k2')}
+				/>
+			</div>
+		</foreignObject>
 
 		<!-- MANIFOLD (ГРЕБЕНКА) -->
 		<g class="manifold" class:active={isManifoldActive}>
@@ -408,7 +463,8 @@
 			x2={collector.x}
 			y2={z5.y + valveHeight / 2}
 			class="flow-indicator"
-			class:turnedOn={isManifoldActive && (gateValveStates.z1 || gateValveStates.z2)}
+			class:turnedOn={isManifoldActive &&
+				((gateValveStates.z1 && gateValveStates.k1) || (gateValveStates.z2 && gateValveStates.k2))}
 		/>
 
 		<!-- PIPE TO COLLECTOR FROM LINE 1 -->
@@ -426,7 +482,7 @@
 			x2={collector.x}
 			y2={z1.y}
 			class="flow-indicator"
-			class:turnedOn={gateValveStates.z1}
+			class:turnedOn={gateValveStates.z1 && gateValveStates.k1}
 		/>
 
 		<!-- PIPE TO COLLECTOR FROM LINE 2 -->
@@ -444,7 +500,7 @@
 			x2={collector.x}
 			y2={z2.y}
 			class="flow-indicator"
-			class:turnedOn={gateValveStates.z2}
+			class:turnedOn={gateValveStates.z2 && gateValveStates.k2}
 		/>
 
 		<!-- GATE VALVE Z1 -->
@@ -617,7 +673,8 @@
 			x2={output.x - output.pipeOffset}
 			y2={z3.y + valveHeight / 2}
 			class="flow-indicator"
-			class:turnedOn={gateValveStates.z3 && (gateValveStates.z1 || gateValveStates.z2)}
+			class:turnedOn={gateValveStates.z3 &&
+				((gateValveStates.z1 && gateValveStates.k1) || (gateValveStates.z2 && gateValveStates.k2))}
 		/>
 		<polygon
 			points={getOutputArrowPoints(z3.y + valveHeight / 2)}
@@ -647,7 +704,8 @@
 			x2={output.x - output.pipeOffset}
 			y2={z5.y + valveHeight / 2}
 			class="flow-indicator"
-			class:turnedOn={gateValveStates.z5 && (gateValveStates.z1 || gateValveStates.z2)}
+			class:turnedOn={gateValveStates.z5 &&
+				((gateValveStates.z1 && gateValveStates.k1) || (gateValveStates.z2 && gateValveStates.k2))}
 		/>
 		<polygon
 			points={getOutputArrowPoints(z5.y + valveHeight / 2)}
