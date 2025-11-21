@@ -12,7 +12,14 @@ export function calculateDiameter(Q_m3s: number, V_m_s: number): number {
   if (!Number.isFinite(Q_m3s) || !Number.isFinite(V_m_s) || V_m_s === 0 || Q_m3s === 0) {
     return NaN;
   }
-  return Math.sqrt((4 * Q_m3s) / (Math.PI * V_m_s)) * 1000;
+
+  const sizes = [50, 65, 80, 100, 125, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1200]
+
+  const diameter = Math.sqrt((4 * Q_m3s) / (Math.PI * V_m_s)) * 1000;
+
+  const catalogDiameter = sizes.find(s => s >= diameter) ?? sizes[sizes.length - 1];
+
+  return catalogDiameter
 }
 
 export function calculatePressure(head_m: number): number {
@@ -54,7 +61,7 @@ export function calculate(inputs: CalculatorInputs): CalculatorResults {
   };
 
   const combined_flow_m3s = (pump1.flow_m3_per_s + pump2.flow_m3_per_s) / 2;
-  
+
   const max_head_m = Math.max(pump1.head_m, pump2.head_m);
 
   const gate_valve_z3: ValveResult = {
